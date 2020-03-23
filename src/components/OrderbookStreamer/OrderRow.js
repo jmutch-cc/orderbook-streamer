@@ -22,8 +22,10 @@ class OrderRow extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
+        // console.log(this.props.order.P);
         // console.log(this.props.lastUpdated);
-        return nextProps.lastUpdated == this.props.order.P;
+        // console.log(nextProps.lastUpdated.indexOf(Number(this.props.order.P)) !== -1);
+        return nextProps.lastUpdated.indexOf(Number(this.props.order.P)) !== -1;
     }
 
     componentDidUpdate(prevProps) {
@@ -31,7 +33,8 @@ class OrderRow extends Component {
     }
 
     render() {
-        return (
+        console.log("Rendering row");
+        return ( this.props.order.Q !== 0 &&
             <tr>
                 <td>
                     {this.props.order.P}
@@ -40,6 +43,7 @@ class OrderRow extends Component {
                     {this.props.order.Q}
                 </td>
                 <td>
+                    {this.props.order.Q * this.props.order.P}
                 </td>
                 <td>
                 </td>

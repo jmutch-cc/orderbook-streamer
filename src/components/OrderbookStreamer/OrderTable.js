@@ -10,7 +10,7 @@ class OrderTable extends Component {
     getTableRows(props) {
         if (props.orders) {
             return Object.entries(props.orders).map((item, key) => {
-                if(key < 100){
+                if(key < 50){
                     return (
                         <OrderRow lastUpdated={props.lastUpdated} order={item[1]} key={key}/>
                     )
@@ -31,6 +31,7 @@ class OrderTable extends Component {
 
 
     render() {
+        // console.log("Rendering table");
         return (
         <div>
             <h2>{this.props.title}</h2>

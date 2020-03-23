@@ -7,9 +7,7 @@ const client = new W3CWebSocket('wss://streamer.cryptocompare.com/v2?api_key=ad1
 export class OrderbookService {
 
     snapshot = {0:{},1:{}};
-    callback = function(){
-        console.log("Original callback hit");
-    };
+    lastUpdated = [];
 
     populateSnapshot(snapshot, callback) {
 
@@ -25,7 +23,16 @@ export class OrderbookService {
                 P: String(item.P)
             };
         });
-        callback({orders: this.snapshot, lastUpdated: null});
+        callback({orders: this.snapshot, lastUpdated: this.lastUpdated});
+        // setInterval(this.getSnapshot, 1000)
+    }
+
+    getLastUpdated(){
+        return this.lastUpdated;
+    }
+
+    resetLastUpdated(){
+        this.lastUpdated = [];
     }
 
     getSnapshot(){
@@ -41,12 +48,13 @@ export class OrderbookService {
             return;
         }
         if(update.ACTION == 2){
-            this.snapshot[update.SIDE][update.P]['Q'] = 0;
+           this.snapshot[update.SIDE][update.P]['Q'] = 0;
         }
         if(update.ACTION == 4){
             this.snapshot[update.SIDE][update.P]['Q'] = update.Q;
+            this.lastUpdated.push(update.P);
         }
-        callback({lastUpdated: update.P, orders: this.snapshot});
+        // callback({lastUpdated: update.P, orders: this.snapshot});
     }
 
     subscribe(callback) {

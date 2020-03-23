@@ -9,7 +9,7 @@ class Display extends Component {
         super(props);
         this.state = {
             orders: [],
-            lastUpdated: 0,
+            lastUpdated: [],
         };
     }
 
@@ -22,10 +22,11 @@ class Display extends Component {
     }
 
     render() {
+        // console.log("Rendering display");
         return (
             <div className="container">
                 <div>
-                    <Chart />
+                    <Chart bids={this.props.orders[0] ? Object.values(this.props.orders[0]).slice(0, 50): []} asks={this.props.orders[1] ? Object.values(this.props.orders[1]).slice(0, 50): []} />
                 </div>
                 <div className="row">
                     <div className="col-md-6">

@@ -14,11 +14,18 @@ class OrderbookStreamer extends Component {
             orders: 0,
             lastUpdated: 0,
         };
-        this.lastUpdated = Math.random();
     }
 
     handleSubscribe(event) {
+
         let currentComponent = this;
+        setInterval(function(){
+            currentComponent.setState(prevState => {
+                return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
+            });
+            orderbookService.resetLastUpdated();
+        }, 500);
+
         currentComponent.callback = (data) => {
             if(data.lastUpdated){
                 this.setState(prevState => {
