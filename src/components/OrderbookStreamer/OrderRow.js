@@ -6,46 +6,34 @@ const orderbookService = new OrderbookService();
 
 class OrderRow extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-
-        this.randomVar = Math.random();
-        this.updated = '';
-
-        let currentComponent = this;
-        currentComponent.callback = (data) => {
-            console.log("hit callback");
-        }
-    }
-    componentWillReceiveProps(){
-        // console.log("Will receive in roiw");
+        this.state = {
+            updated: false,
+        };
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        // console.log(this.props.order.P);
-        // console.log(this.props.lastUpdated);
-        // console.log(nextProps.lastUpdated.indexOf(Number(this.props.order.P)) !== -1);
-        return nextProps.lastUpdated.indexOf(Number(this.props.order.P)) !== -1;
-    }
-
-    componentDidUpdate(prevProps) {
-        // console.log("Did update");
+    componentWillReceiveProps(props){
+        this.state.updated = props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1;
     }
 
     render() {
-        console.log("Rendering row");
-        return ( this.props.order.Q !== 0 &&
-            <tr>
+        return (
+            // this.props.order.Q !== 0 &&
+            <tr className={
+                this.state.updated ? 'highlight' : ''
+                }>
                 <td>
-                    {this.props.order.P}
+                    {this.props.order.value}
                 </td>
                 <td>
-                    {this.props.order.Q}
+                    {this.props.order.bidsvolume || this.props.order.asksvolume}
                 </td>
                 <td>
-                    {this.props.order.Q * this.props.order.P}
+                    {this.props.order.value * (this.props.order.bidsvolume || this.props.order.asksvolume || 0)}
                 </td>
                 <td>
+                    {this.props.order.bidstotalvolume || this.props.order.askstotalvolume}
                 </td>
             </tr>
         )

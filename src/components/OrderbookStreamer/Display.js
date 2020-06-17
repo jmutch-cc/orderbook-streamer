@@ -26,7 +26,7 @@ class Display extends Component {
         return (
             <div className="container">
                 <div>
-                    <Chart bids={this.props.orders[0] ? Object.values(this.props.orders[0]).slice(0, 50): []} asks={this.props.orders[1] ? Object.values(this.props.orders[1]).slice(0, 50): []} />
+                    <Chart bids={this.props.orders[0] ? Object.values(this.props.orders[0]): []} asks={this.props.orders[1] ? Object.values(this.props.orders[1]): []} />
                 </div>
                 <div className="row">
                     <div className="col-md-6">

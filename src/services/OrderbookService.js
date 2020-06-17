@@ -2,28 +2,105 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { CCC } from './../ccc-streaming-utils';
 
-const client = new W3CWebSocket('wss://streamer.cryptocompare.com/v2?api_key=ad1eed321df97e8250ad2f2288e2b3838c61b971a7dc857a8d7ad119a3286c6d');
+const client = new W3CWebSocket('wss://streamer.cryptocompare.com/v2?api_key=66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44');
 
 export class OrderbookService {
 
     snapshot = {0:{},1:{}};
     lastUpdated = [];
 
+    processData(list, type, desc) {
+        // console.log(list);
+        // Convert to data points
+        let res = {};
+        for(var i = 0; i < list.length; i++) {
+            list[i] = {
+                value: Number(list[i]['P']),
+                volume: Number(list[i][['Q']]),
+            }
+        }
+
+        // Sort list just in case
+        list.sort(function(a, b) {
+            if (a.value > b.value) {
+                return 1;
+            }
+            else if (a.value < b.value) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        });
+
+        // Calculate cummulative volume
+        if (desc) {
+            for(var i = list.length - 1; i >= 0; i--) {
+                if (i < (list.length - 1)) {
+                    list[i].totalvolume = list[i+1].totalvolume + list[i].volume;
+                }
+                else {
+                    list[i].totalvolume = list[i].volume;
+                }
+                let dp = {};
+                dp["value"] = list[i].value;
+                dp[type + "volume"] = list[i].volume;
+                dp[type + "totalvolume"] = list[i].totalvolume;
+                res[list[i].value] = dp;
+            }
+        }
+        else {
+            for(var i = 0; i < list.length; i++) {
+                if (i > 0) {
+                    list[i].totalvolume = list[i-1].totalvolume + list[i].volume;
+                }
+                else {
+                    list[i].totalvolume = list[i].volume;
+                }
+                let dp = {};
+                dp["value"] = list[i].value;
+                dp[type + "volume"] = list[i].volume;
+                dp[type + "totalvolume"] = list[i].totalvolume;
+                res[list[i].value] = dp
+            }
+        }
+        return res;
+    }
+
     populateSnapshot(snapshot, callback) {
 
         snapshot.BID.map((item, key) => {
-            this.snapshot[0][item.P] = {
+            this.snapshot[0][item.P*100] = {
                 Q: item.Q,
                 P: String(item.P)
             };
         });
         snapshot.ASK.map((item, key) => {
-            this.snapshot[1][item.P] = {
+            this.snapshot[1][item.P*100] = {
                 Q: item.Q,
                 P: String(item.P)
             };
         });
-        callback({orders: this.snapshot, lastUpdated: this.lastUpdated});
+
+        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-100);
+        var topBids = [];
+        for(var bidKey of bidKeys){
+            topBids.push(this.snapshot[0][bidKey]);
+        }
+        var askKeys = Object.keys(this.snapshot[1]).slice(0,100);
+        var topAsks = [];
+        for(var askKey of askKeys){
+            topAsks.push(this.snapshot[1][askKey]);
+        }
+        console.log(topBids);
+        console.log(topAsks);
+        let bids = this.processData(topBids, 'bids', true);
+        let asks = this.processData(topAsks, 'asks',  false);
+
+        console.log("bids: ", bids);
+        console.log("asks: ", asks);
+
+        callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated});
         // setInterval(this.getSnapshot, 1000)
     }
 
@@ -36,25 +113,40 @@ export class OrderbookService {
     }
 
     getSnapshot(){
-        return this.snapshot;
+        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-100);
+        var topBids = [];
+        for(var bidKey of bidKeys){
+            topBids.push(this.snapshot[0][bidKey]);
+        }
+        var askKeys = Object.keys(this.snapshot[1]).slice(0,100);
+        var topAsks = [];
+        for(var askKey of askKeys){
+            topAsks.push(this.snapshot[1][askKey]);
+        }
+        console.log(topBids);
+        console.log(topAsks);
+        let bids = this.processData(topBids, 'bids', true);
+        let asks = this.processData(topAsks, 'asks',  false);
+        return {0: bids, 1: asks};
     }
 
     updateSnapshot(update, callback){
         if(update.ACTION == 1){
-            this.snapshot[update.SIDE][update.P] = {'P': update.P, 'Q': update.Q};
+            this.snapshot[update.SIDE][update.P*100] = {'P': update.P, 'Q': update.Q};
         }
-        if(this.snapshot[update.SIDE][update.P] == undefined){
+        if(this.snapshot[update.SIDE][update.P*100] == undefined){
             console.error("No price ", update.P, " found on side ", update.SIDE, ' to perform action ', update.ACTION);
             return;
         }
         if(update.ACTION == 2){
-           this.snapshot[update.SIDE][update.P]['Q'] = 0;
+           // this.snapshot[update.SIDE][update.P]['Q'] = 0;
+           delete this.snapshot[update.SIDE][update.P*100];
         }
         if(update.ACTION == 4){
-            this.snapshot[update.SIDE][update.P]['Q'] = update.Q;
+            this.snapshot[update.SIDE][update.P*100]['Q'] = update.Q;
             this.lastUpdated.push(update.P);
         }
-        // callback({lastUpdated: update.P, orders: this.snapshot});
+        // callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated});
     }
 
     subscribe(callback) {
@@ -76,9 +168,9 @@ export class OrderbookService {
             }
         };
         client.send(JSON.stringify({
-            api_key: 'ad1eed321df97e8250ad2f2288e2b3838c61b971a7dc857a8d7ad119a3286c6d',
             action: 'SubAdd',
-            subs: ["8~Binance~ETH~BTC"]
+            subs: ["8~Binance~BTC~USDT"],
+            api_key: '66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44',
         }));
     }
 

@@ -20,6 +20,7 @@ class Chart extends Component {
         xAxis.dataFields.category = "value";
 //xAxis.renderer.grid.template.location = 0;
         xAxis.renderer.minGridDistance = 50;
+        xAxis.renderer.labels.template.fontSize = 12;
         xAxis.title.text = "Price (BTC/ETH)";
 
         let yAxis = chart.yAxes.push(new am4charts.ValueAxis());
@@ -68,77 +69,23 @@ class Chart extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log("Chart received props", nextProps);
         let data = [];
+        // nextProps.bids.reverse();
         if(!this.chart && nextProps.bids.length && nextProps.asks.length){
             this.createChart();
-            this.chart.data = this.doChart(nextProps.bids, nextProps.asks);
+            data = nextProps.bids.concat(nextProps.asks);
+            data.sort(function (a, b) {
+                return a.value - b.value;
+            });
+            this.chart.data = data;
         } else if(this.chart) {
-            this.chart.data = this.doChart(nextProps.bids, nextProps.asks);
+            data = nextProps.bids.concat(nextProps.asks);
+            data.sort(function (a, b) {
+                return a.value - b.value;
+            });
+            this.chart.data = data;
             // this.chart.validateData();
         }
-    }
-
-    doChart(bids, asks){
-        function processData(list, type, desc) {
-            console.log(list);
-            // Convert to data points
-            for(var i = 0; i < list.length; i++) {
-                list[i] = {
-                    value: Number(list[i]['P']),
-                    volume: Number(list[i][['Q']]),
-                }
-            }
-
-            // Sort list just in case
-            list.sort(function(a, b) {
-                if (a.value > b.value) {
-                    return 1;
-                }
-                else if (a.value < b.value) {
-                    return -1;
-                }
-                else {
-                    return 0;
-                }
-            });
-
-            // Calculate cummulative volume
-            if (desc) {
-                for(var i = list.length - 1; i >= 0; i--) {
-                    if (i < (list.length - 1)) {
-                        list[i].totalvolume = list[i+1].totalvolume + list[i].volume;
-                    }
-                    else {
-                        list[i].totalvolume = list[i].volume;
-                    }
-                    let dp = {};
-                    dp["value"] = list[i].value;
-                    dp[type + "volume"] = list[i].volume;
-                    dp[type + "totalvolume"] = list[i].totalvolume;
-                    res.unshift(dp);
-                }
-            }
-            else {
-                for(var i = 0; i < list.length; i++) {
-                    if (i > 0) {
-                        list[i].totalvolume = list[i-1].totalvolume + list[i].volume;
-                    }
-                    else {
-                        list[i].totalvolume = list[i].volume;
-                    }
-                    let dp = {};
-                    dp["value"] = list[i].value;
-                    dp[type + "volume"] = list[i].volume;
-                    dp[type + "totalvolume"] = list[i].totalvolume;
-                    res.push(dp);
-                }
-            }
-        }
-        let res = []
-        processData(bids, "bids", true);
-        processData(asks, "asks", false);
-        return res;
     }
 
     componentDidMount() {

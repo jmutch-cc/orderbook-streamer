@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+.highlight {
+  -moz-animation: highlight 2s ease 0s 1 alternate ;
+  -webkit-animation: highlight 2s ease 0s 1 alternate;
+  animation: highlight 2s ease 0s 1 alternate;
+}
+@-webkit-keyframes highlight {
+  from { background-color: #F6F6BC;}
+  to {background-color: white;}
+}
+@-moz-keyframes highlight {
+  from { background-color: #F6F6BC;}
+  to {background-color: white;}
+}
+@keyframes highlight {
+  from { background-color: #F6F6BC;}
+  to {background-color: white;}
+}
