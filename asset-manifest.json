@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/orderbook-streamer/static/css/main.1ccb61db.chunk.css",
-    "main.js": "/orderbook-streamer/static/js/main.2d6edb1d.chunk.js",
-    "main.js.map": "/orderbook-streamer/static/js/main.2d6edb1d.chunk.js.map",
+    "main.css": "/orderbook-streamer/static/css/main.0d31459a.chunk.css",
+    "main.js": "/orderbook-streamer/static/js/main.a4259079.chunk.js",
+    "main.js.map": "/orderbook-streamer/static/js/main.a4259079.chunk.js.map",
     "runtime-main.js": "/orderbook-streamer/static/js/runtime-main.c7df446f.js",
     "runtime-main.js.map": "/orderbook-streamer/static/js/runtime-main.c7df446f.js.map",
     "xlsx.js": "/orderbook-streamer/static/js/xlsx.b970c454.chunk.js",
     "xlsx.js.map": "/orderbook-streamer/static/js/xlsx.b970c454.chunk.js.map",
     "static/css/3.de424728.chunk.css": "/orderbook-streamer/static/css/3.de424728.chunk.css",
-    "static/js/3.4d976a1f.chunk.js": "/orderbook-streamer/static/js/3.4d976a1f.chunk.js",
-    "static/js/3.4d976a1f.chunk.js.map": "/orderbook-streamer/static/js/3.4d976a1f.chunk.js.map",
+    "static/js/3.c74965cc.chunk.js": "/orderbook-streamer/static/js/3.c74965cc.chunk.js",
+    "static/js/3.c74965cc.chunk.js.map": "/orderbook-streamer/static/js/3.c74965cc.chunk.js.map",
     "static/js/4.9c807c91.chunk.js": "/orderbook-streamer/static/js/4.9c807c91.chunk.js",
     "static/js/4.9c807c91.chunk.js.map": "/orderbook-streamer/static/js/4.9c807c91.chunk.js.map",
     "static/js/5.4191ac33.chunk.js": "/orderbook-streamer/static/js/5.4191ac33.chunk.js",
@@ -17,11 +17,11 @@
     "static/js/6.b58bc119.chunk.js": "/orderbook-streamer/static/js/6.b58bc119.chunk.js",
     "static/js/6.b58bc119.chunk.js.map": "/orderbook-streamer/static/js/6.b58bc119.chunk.js.map",
     "index.html": "/orderbook-streamer/index.html",
-    "precache-manifest.6dc4a705114ecc76e071290ef146172b.js": "/orderbook-streamer/precache-manifest.6dc4a705114ecc76e071290ef146172b.js",
+    "precache-manifest.59a899f731a20f523dad3596bd472d3c.js": "/orderbook-streamer/precache-manifest.59a899f731a20f523dad3596bd472d3c.js",
     "service-worker.js": "/orderbook-streamer/service-worker.js",
     "static/css/3.de424728.chunk.css.map": "/orderbook-streamer/static/css/3.de424728.chunk.css.map",
-    "static/css/main.1ccb61db.chunk.css.map": "/orderbook-streamer/static/css/main.1ccb61db.chunk.css.map",
-    "static/js/3.4d976a1f.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/3.4d976a1f.chunk.js.LICENSE.txt",
+    "static/css/main.0d31459a.chunk.css.map": "/orderbook-streamer/static/css/main.0d31459a.chunk.css.map",
+    "static/js/3.c74965cc.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/3.c74965cc.chunk.js.LICENSE.txt",
     "static/js/4.9c807c91.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/4.9c807c91.chunk.js.LICENSE.txt",
     "static/js/5.4191ac33.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/5.4191ac33.chunk.js.LICENSE.txt",
     "static/media/logo.svg": "/orderbook-streamer/static/media/logo.5d5d9eef.svg"
@@ -29,8 +29,8 @@
   "entrypoints": [
     "static/js/runtime-main.c7df446f.js",
     "static/css/3.de424728.chunk.css",
-    "static/js/3.4d976a1f.chunk.js",
-    "static/css/main.1ccb61db.chunk.css",
-    "static/js/main.2d6edb1d.chunk.js"
+    "static/js/3.c74965cc.chunk.js",
+    "static/css/main.0d31459a.chunk.css",
+    "static/js/main.a4259079.chunk.js"
   ]
 }
