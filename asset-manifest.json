@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/orderbook-streamer/static/css/main.043517b3.chunk.css",
-    "main.js": "/orderbook-streamer/static/js/main.6dc9d810.chunk.js",
-    "main.js.map": "/orderbook-streamer/static/js/main.6dc9d810.chunk.js.map",
+    "main.js": "/orderbook-streamer/static/js/main.6d4e59a1.chunk.js",
+    "main.js.map": "/orderbook-streamer/static/js/main.6d4e59a1.chunk.js.map",
     "runtime-main.js": "/orderbook-streamer/static/js/runtime-main.c7df446f.js",
     "runtime-main.js.map": "/orderbook-streamer/static/js/runtime-main.c7df446f.js.map",
     "xlsx.js": "/orderbook-streamer/static/js/xlsx.b970c454.chunk.js",
@@ -17,7 +17,7 @@
     "static/js/6.b58bc119.chunk.js": "/orderbook-streamer/static/js/6.b58bc119.chunk.js",
     "static/js/6.b58bc119.chunk.js.map": "/orderbook-streamer/static/js/6.b58bc119.chunk.js.map",
     "index.html": "/orderbook-streamer/index.html",
-    "precache-manifest.20eab4022d423b4bae7f945cf373242b.js": "/orderbook-streamer/precache-manifest.20eab4022d423b4bae7f945cf373242b.js",
+    "precache-manifest.745692c2bdad959a91c888371245a513.js": "/orderbook-streamer/precache-manifest.745692c2bdad959a91c888371245a513.js",
     "service-worker.js": "/orderbook-streamer/service-worker.js",
     "static/css/3.de424728.chunk.css.map": "/orderbook-streamer/static/css/3.de424728.chunk.css.map",
     "static/css/main.043517b3.chunk.css.map": "/orderbook-streamer/static/css/main.043517b3.chunk.css.map",
@@ -31,6 +31,6 @@
     "static/css/3.de424728.chunk.css",
     "static/js/3.c74965cc.chunk.js",
     "static/css/main.043517b3.chunk.css",
-    "static/js/main.6dc9d810.chunk.js"
+    "static/js/main.6d4e59a1.chunk.js"
   ]
 }

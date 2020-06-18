@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1c67665129b99c2d11b37d629e6aeba3",
+    "revision": "90c02d38654cc7d2a2040aed8ebdcdb0",
     "url": "/orderbook-streamer/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/orderbook-streamer/static/css/3.de424728.chunk.css"
   },
   {
-    "revision": "98b561c8d2685c4a6bac",
+    "revision": "4ad05978b6b5832f353b",
     "url": "/orderbook-streamer/static/css/main.043517b3.chunk.css"
   },
   {
@@ -40,8 +40,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/orderbook-streamer/static/js/6.b58bc119.chunk.js"
   },
   {
-    "revision": "98b561c8d2685c4a6bac",
-    "url": "/orderbook-streamer/static/js/main.6dc9d810.chunk.js"
+    "revision": "4ad05978b6b5832f353b",
+    "url": "/orderbook-streamer/static/js/main.6d4e59a1.chunk.js"
   },
   {
     "revision": "49665dd290a2c806345e",
