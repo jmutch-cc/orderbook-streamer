@@ -1,6 +1,7 @@
 import React, { Component} from 'react';
 import {Chart} from './Chart';
 import {OrderTable} from './OrderTable';
+import {ChartStats} from './ChartStats';
 import PropTypes from 'prop-types';
 
 class Display extends Component {
@@ -27,6 +28,9 @@ class Display extends Component {
             <div className="container">
                 <div>
                     <Chart bids={this.props.orders[0] ? Object.values(this.props.orders[0]): []} asks={this.props.orders[1] ? Object.values(this.props.orders[1]): []} />
+                </div>
+                <div className="row">
+                    <ChartStats orders={this.props.orders}></ChartStats>
                 </div>
                 <div className="row">
                     <div className="col-md-6">

@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <div className="App">
-        <Header title='Orderbook Streamer' />
+        <Header title='Orderbook L2 Streamer' />
         <OrderbookStreamer lastUpdated={0}/>
     </div>
   );

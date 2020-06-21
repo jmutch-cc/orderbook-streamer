@@ -18,22 +18,30 @@ class OrderRow extends Component {
     }
 
     render() {
+        this.price = this.props.order.value;
+        this.price = +this.price.toFixed(6);
+        this.volume = this.props.order.bidsvolume || this.props.order.asksvolume;
+        this.volume = +this.volume.toFixed(6);
+        this.tsymPrice = this.props.order.value * (this.props.order.bidsvolume || this.props.order.asksvolume || 0)
+        this.tsymPrice = +this.tsymPrice.toFixed(6);
+        this.totalVolume = this.props.order.bidstotalvolume || this.props.order.askstotalvolume;
+        this.totalVolume = +this.totalVolume.toFixed(6);
         return (
-            // this.props.order.Q !== 0 &&
+
             <tr className={
-                this.state.updated ? 'highlight' : ''
+                `d-flex ${this.state.updated ? 'highlight' : ''}`
                 }>
-                <td>
-                    {this.props.order.value}
+                <td className="col-3">
+                    {this.price}
                 </td>
-                <td>
-                    {this.props.order.bidsvolume || this.props.order.asksvolume}
+                <td className="col-3">
+                    {this.volume}
                 </td>
-                <td>
-                    {this.props.order.value * (this.props.order.bidsvolume || this.props.order.asksvolume || 0)}
+                <td className="col-3">
+                    {this.tsymPrice}
                 </td>
-                <td>
-                    {this.props.order.bidstotalvolume || this.props.order.askstotalvolume}
+                <td className="col-3">
+                    {this.totalVolume}
                 </td>
             </tr>
         )

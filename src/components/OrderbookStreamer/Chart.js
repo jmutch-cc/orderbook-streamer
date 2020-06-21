@@ -25,6 +25,11 @@ class Chart extends Component {
 
         let yAxis = chart.yAxes.push(new am4charts.ValueAxis());
         yAxis.title.text = "Volume";
+        yAxis.max = 40;
+        yAxis.min = 0;
+        yAxis.keepSelection = true;
+        yAxis.start = 0;
+        yAxis.end = 1;
 
 // Create series
         let series = chart.series.push(new am4charts.StepLineSeries());
@@ -71,18 +76,17 @@ class Chart extends Component {
     componentWillReceiveProps(nextProps){
         let data = [];
         // nextProps.bids.reverse();
+        nextProps.bids.sort(function (a, b) {
+            return a.value - b.value;
+        });
+        nextProps.asks.sort(function (a, b) {
+            return a.value - b.value;
+        });
+        data = nextProps.bids.slice(-40).concat(nextProps.asks.slice(0,40));
         if(!this.chart && nextProps.bids.length && nextProps.asks.length){
             this.createChart();
-            data = nextProps.bids.concat(nextProps.asks);
-            data.sort(function (a, b) {
-                return a.value - b.value;
-            });
             this.chart.data = data;
         } else if(this.chart) {
-            data = nextProps.bids.concat(nextProps.asks);
-            data.sort(function (a, b) {
-                return a.value - b.value;
-            });
             this.chart.data = data;
             // this.chart.validateData();
         }

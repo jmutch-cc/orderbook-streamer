@@ -9,20 +9,14 @@ class OrderTable extends Component {
 
     getTableRows(props) {
         if (props.orders) {
-            // console.log("prop orders", props.orders);
-            // console.log("prop lastUpdated", props.lastUpdated);
-            var objs = Object.entries(props.orders);
-            if(props.title == 'Buy'){
-                objs.sort().reverse();
-            } else {
-                objs.sort();
+            var objs = Object.keys(props.orders);
+            if(props.title==='Buy'){
+                objs.reverse();
             }
-            return objs.map((item, key) => {
-                if(key < 50){
-                    return (
-                        <OrderRow lastUpdated={props.lastUpdated} order={item[1]} key={key}/>
-                    )
-                }
+            return objs.slice(0,30).map((key) => {
+                return (
+                    <OrderRow lastUpdated={props.lastUpdated} order={props.orders[key]} key={key}/>
+                )
             })
         }
     }
@@ -45,18 +39,18 @@ class OrderTable extends Component {
             <h2>{this.props.title}</h2>
             <table className="orderbook">
                 <thead>
-                <tr>
-                    <td>
+                <tr className="d-flex">
+                    <td className="col-3">
                         Price
                     </td>
-                    <td>
-                        Quantity
+                    <td className="col-3">
+                        BTC
                     </td>
-                    <td>
-                        tsym
+                    <td className="col-3">
+                        USDT
                     </td>
-                    <td>
-                        Sum(tsym)
+                    <td className="col-3">
+                        Sum(USDT)
                     </td>
                 </tr>
                 </thead>

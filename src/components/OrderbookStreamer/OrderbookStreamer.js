@@ -19,12 +19,19 @@ class OrderbookStreamer extends Component {
     handleSubscribe(event) {
 
         let currentComponent = this;
-        setInterval(function(){
-            currentComponent.setState(prevState => {
-                return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
-            });
-            orderbookService.resetLastUpdated();
-        }, 1000);
+        currentComponent.setState(prevState => {
+            return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
+        });
+        orderbookService.resetLastUpdated();
+        setTimeout(function(){
+            setInterval(function(){
+                currentComponent.setState(prevState => {
+                    return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
+                });
+                orderbookService.resetLastUpdated();
+            }, 5000);
+        }, 5000);
+
 
         currentComponent.callback = (data) => {
             if(data.lastUpdated){

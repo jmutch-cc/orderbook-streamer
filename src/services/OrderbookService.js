@@ -8,6 +8,7 @@ export class OrderbookService {
 
     snapshot = {0:{},1:{}};
     lastUpdated = [];
+    depth = 20000;
 
     processData(list, type, desc) {
         // console.log(list);
@@ -46,8 +47,14 @@ export class OrderbookService {
                 dp["value"] = list[i].value;
                 dp[type + "volume"] = list[i].volume;
                 dp[type + "totalvolume"] = list[i].totalvolume;
-                res[list[i].value] = dp;
+                res[list[i].value*100] = dp;
             }
+            var ordered = {};
+            Object.keys(res).sort(function (a, b) {
+                return a-b;
+            }).forEach(function(key) {
+                ordered[key] = res[key];
+            });
         }
         else {
             for(var i = 0; i < list.length; i++) {
@@ -61,10 +68,16 @@ export class OrderbookService {
                 dp["value"] = list[i].value;
                 dp[type + "volume"] = list[i].volume;
                 dp[type + "totalvolume"] = list[i].totalvolume;
-                res[list[i].value] = dp
+                res[list[i].value*100] = dp
             }
+            var ordered = {};
+            Object.keys(res).sort(function (a, b) {
+                return b-a;
+            }).forEach(function(key) {
+                ordered[key] = res[key];
+            });
         }
-        return res;
+        return ordered;
     }
 
     populateSnapshot(snapshot, callback) {
@@ -82,26 +95,20 @@ export class OrderbookService {
             };
         });
 
-        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-100);
+        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-this.depth);
         var topBids = [];
         for(var bidKey of bidKeys){
             topBids.push(this.snapshot[0][bidKey]);
         }
-        var askKeys = Object.keys(this.snapshot[1]).slice(0,100);
+        var askKeys = Object.keys(this.snapshot[1]).slice(0,this.depth);
         var topAsks = [];
         for(var askKey of askKeys){
             topAsks.push(this.snapshot[1][askKey]);
         }
-        console.log(topBids);
-        console.log(topAsks);
         let bids = this.processData(topBids, 'bids', true);
         let asks = this.processData(topAsks, 'asks',  false);
 
-        console.log("bids: ", bids);
-        console.log("asks: ", asks);
-
         callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated});
-        // setInterval(this.getSnapshot, 1000)
     }
 
     getLastUpdated(){
@@ -113,18 +120,16 @@ export class OrderbookService {
     }
 
     getSnapshot(){
-        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-100);
+        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-this.depth);
         var topBids = [];
         for(var bidKey of bidKeys){
             topBids.push(this.snapshot[0][bidKey]);
         }
-        var askKeys = Object.keys(this.snapshot[1]).slice(0,100);
+        var askKeys = Object.keys(this.snapshot[1]).slice(0,this.depth);
         var topAsks = [];
         for(var askKey of askKeys){
             topAsks.push(this.snapshot[1][askKey]);
         }
-        console.log(topBids);
-        console.log(topAsks);
         let bids = this.processData(topBids, 'bids', true);
         let asks = this.processData(topAsks, 'asks',  false);
         return {0: bids, 1: asks};
