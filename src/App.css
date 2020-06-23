@@ -48,9 +48,9 @@ table.orderbook tbody{
   }
 }
 .highlight {
-  -moz-animation: highlight 2s ease 0s 1 alternate ;
-  -webkit-animation: highlight 2s ease 0s 1 alternate;
-  animation: highlight 2s ease 0s 1 alternate;
+  -moz-animation: highlight 1s ease 0s 1 alternate ;
+  -webkit-animation: highlight 1s ease 0s 1 alternate;
+  animation: highlight 1s ease 0s 1 alternate;
 }
 @-webkit-keyframes highlight {
   from { background-color: #F6F6BC;}

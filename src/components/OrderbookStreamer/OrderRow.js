@@ -13,11 +13,8 @@ class OrderRow extends Component {
         };
     }
 
-    componentWillReceiveProps(props){
-        this.state.updated = props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1;
-    }
-
     render() {
+        this.state.updated = this.props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1;
         this.price = this.props.order.value;
         this.price = +this.price.toFixed(6);
         this.volume = this.props.order.bidsvolume || this.props.order.asksvolume;

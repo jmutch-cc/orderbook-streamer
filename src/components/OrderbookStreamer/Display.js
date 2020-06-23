@@ -26,6 +26,7 @@ class Display extends Component {
         // console.log("Rendering display");
         return (
             <div className="container">
+                
                 <div>
                     <Chart bids={this.props.orders[0] ? Object.values(this.props.orders[0]): []} asks={this.props.orders[1] ? Object.values(this.props.orders[1]): []} />
                 </div>

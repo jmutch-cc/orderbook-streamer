@@ -29,7 +29,7 @@ class OrderbookStreamer extends Component {
                     return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
                 });
                 orderbookService.resetLastUpdated();
-            }, 5000);
+            }, 1000);
         }, 5000);
 
 

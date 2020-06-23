@@ -143,6 +143,7 @@ export class OrderbookService {
     updateSnapshot(update, callback){
         if(update.ACTION == 1){
             this.snapshot[update.SIDE][update.P*100] = {'P': update.P, 'Q': update.Q};
+            this.lastUpdated.push(update.P);
         }
         if(this.snapshot[update.SIDE][update.P*100] == undefined){
             console.error("No price ", update.P, " found on side ", update.SIDE, ' to perform action ', update.ACTION);

@@ -104,9 +104,38 @@ class Chart extends Component {
 
     render() {
         return (
-            <div>
+            <div className={"row"} style={{marginTop:"20px", position:"relative"}}>
                 <h2>Chart</h2>
-                <div id="chartdiv" style={{ width: "100%", height: "500px" }}></div>
+                <div className="col-md-12" style={{ position: "absolute", height:"400px", width:"100%", paddingTop:"70px"}}>
+                    <div className="row">
+                        <div
+                            className="col-md-4 text-right"
+                            style={{color: "#5cb85c"}}
+                        >
+                            bid
+                        </div>
+                        <div
+                            className="col-md-4 text-center"
+                            style={{fontSize:"20px", fontWeight:"bold"}}
+                        >
+                            mid
+                        </div>
+                        <div
+                            className="col-md-4 text-left"
+                            style={{color: "#d44d3d"}}
+                        >
+                            ask
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-4 text-right">Buy</div>
+                        <div
+                            className="col-md-4 text-center">Spread
+                        </div>
+                        <div className="col-md-4 text-left">Sell</div>
+                    </div>
+                </div>
+                <div id="chartdiv"className="col-md-12" style={{ width: "100%", height: "400px" }}></div>
             </div>
         );
     }

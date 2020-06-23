@@ -4,30 +4,7 @@ import PropTypes from 'prop-types';
 
 const orderbookService = new OrderbookService();
 
-class ChartStats extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            updated: false,
-            priceImpactVolume: 10
-        };
-        this.stats = {
-            midpoint: 0,
-            depth: {
-                bids: {},
-                asks: {}
-            },
-            impact: {
-                buy: 0,
-                sell: 0
-            },
-            average: {
-                buy: 0,
-                sell: 0
-            }
-        }
-    }
+class ChartContainer extends Component {
 
     getMidPoint(bids, asks){
         var lastBid = bids[0]/100;
@@ -164,7 +141,7 @@ class ChartStats extends Component {
         )
     }
 }
-ChartStats.propTypes = {
+ChartContainer.propTypes = {
 };
 
-export { ChartStats };
+export { ChartContainer };
