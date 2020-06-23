@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/orderbook-streamer/static/css/main.043517b3.chunk.css",
-    "main.js": "/orderbook-streamer/static/js/main.5f671504.chunk.js",
-    "main.js.map": "/orderbook-streamer/static/js/main.5f671504.chunk.js.map",
+    "main.css": "/orderbook-streamer/static/css/main.9ebbefd5.chunk.css",
+    "main.js": "/orderbook-streamer/static/js/main.0c03f18f.chunk.js",
+    "main.js.map": "/orderbook-streamer/static/js/main.0c03f18f.chunk.js.map",
     "runtime-main.js": "/orderbook-streamer/static/js/runtime-main.86912ca7.js",
     "runtime-main.js.map": "/orderbook-streamer/static/js/runtime-main.86912ca7.js.map",
     "xlsx.js": "/orderbook-streamer/static/js/xlsx.ef1315d6.chunk.js",
@@ -17,10 +17,10 @@
     "static/js/6.81a4c0c9.chunk.js": "/orderbook-streamer/static/js/6.81a4c0c9.chunk.js",
     "static/js/6.81a4c0c9.chunk.js.map": "/orderbook-streamer/static/js/6.81a4c0c9.chunk.js.map",
     "index.html": "/orderbook-streamer/index.html",
-    "precache-manifest.ee05e263ad486b2fd62003747e2c7178.js": "/orderbook-streamer/precache-manifest.ee05e263ad486b2fd62003747e2c7178.js",
+    "precache-manifest.ce481f2760799f13947618882993ffc6.js": "/orderbook-streamer/precache-manifest.ce481f2760799f13947618882993ffc6.js",
     "service-worker.js": "/orderbook-streamer/service-worker.js",
     "static/css/3.de424728.chunk.css.map": "/orderbook-streamer/static/css/3.de424728.chunk.css.map",
-    "static/css/main.043517b3.chunk.css.map": "/orderbook-streamer/static/css/main.043517b3.chunk.css.map",
+    "static/css/main.9ebbefd5.chunk.css.map": "/orderbook-streamer/static/css/main.9ebbefd5.chunk.css.map",
     "static/js/3.b2e7e138.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/3.b2e7e138.chunk.js.LICENSE.txt",
     "static/js/4.5a431862.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/4.5a431862.chunk.js.LICENSE.txt",
     "static/js/5.c42bcaa9.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/5.c42bcaa9.chunk.js.LICENSE.txt",
@@ -30,7 +30,7 @@
     "static/js/runtime-main.86912ca7.js",
     "static/css/3.de424728.chunk.css",
     "static/js/3.b2e7e138.chunk.js",
-    "static/css/main.043517b3.chunk.css",
-    "static/js/main.5f671504.chunk.js"
+    "static/css/main.9ebbefd5.chunk.css",
+    "static/js/main.0c03f18f.chunk.js"
   ]
 }
