@@ -1,19 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
+import Infinite from 'react-infinite';
 import {OrderRow} from './OrderRow';
 import { OrderbookService } from '../../services/OrderbookService';
 
 const orderbookService = new OrderbookService();
-
 class OrderTable extends Component {
 
     getTableRows(props) {
         if (props.orders) {
             var objs = Object.keys(props.orders);
             if(props.title==='Buy'){
-                objs.reverse();
+                objs.sort(function(a,b){return b-a});
+            } else {
+                objs.sort(function(a,b){return a-b});
             }
-            return objs.slice(0,30).map((key) => {
+            return objs.map((key) => {
                 return (
                     <OrderRow lastUpdated={props.lastUpdated} order={props.orders[key]} key={key}/>
                 )
@@ -33,31 +35,28 @@ class OrderTable extends Component {
 
 
     render() {
-        // console.log("Rendering table");
         return (
         <div>
             <h2>{this.props.title}</h2>
-            <table className="orderbook">
-                <thead>
-                <tr className="d-flex">
-                    <td className="col-3">
+            <div className="orderbook">
+                <div className="d-flex">
+                    <div className="col-3">
                         Price
-                    </td>
-                    <td className="col-3">
+                    </div>
+                    <div className="col-3">
                         BTC
-                    </td>
-                    <td className="col-3">
+                    </div>
+                    <div className="col-3">
                         USDT
-                    </td>
-                    <td className="col-3">
+                    </div>
+                    <div className="col-3">
                         Sum(USDT)
-                    </td>
-                </tr>
-                </thead>
-                <tbody>
+                    </div>
+                </div>
+                <Infinite containerHeight={200} elementHeight={40}>
                     {this.getTableRows(this.props)}
-                </tbody>
-            </table>
+                </Infinite>
+            </div>
         </div>
         )
     }

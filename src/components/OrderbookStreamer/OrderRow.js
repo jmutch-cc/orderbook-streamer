@@ -28,22 +28,22 @@ class OrderRow extends Component {
         this.totalVolume = +this.totalVolume.toFixed(6);
         return (
 
-            <tr className={
+            <div className={
                 `d-flex ${this.state.updated ? 'highlight' : ''}`
                 }>
-                <td className="col-3">
+                <div className="col-3">
                     {this.price}
-                </td>
-                <td className="col-3">
+                </div>
+                <div className="col-3">
                     {this.volume}
-                </td>
-                <td className="col-3">
+                </div>
+                <div className="col-3">
                     {this.tsymPrice}
-                </td>
-                <td className="col-3">
+                </div>
+                <div className="col-3">
                     {this.totalVolume}
-                </td>
-            </tr>
+                </div>
+            </div>
         )
     }
 }

@@ -8,7 +8,7 @@ export class OrderbookService {
 
     snapshot = {0:{},1:{}};
     lastUpdated = [];
-    depth = 20000;
+    depth = 2000000;
 
     processData(list, type, desc) {
         // console.log(list);
@@ -39,14 +39,17 @@ export class OrderbookService {
             for(var i = list.length - 1; i >= 0; i--) {
                 if (i < (list.length - 1)) {
                     list[i].totalvolume = list[i+1].totalvolume + list[i].volume;
+                    list[i].totalvolumefrom = list[i+1].totalvolumefrom + (list[i].volume * list[i].value);
                 }
                 else {
                     list[i].totalvolume = list[i].volume;
+                    list[i].totalvolumefrom = list[i].volume * list[i].value;
                 }
                 let dp = {};
                 dp["value"] = list[i].value;
                 dp[type + "volume"] = list[i].volume;
                 dp[type + "totalvolume"] = list[i].totalvolume;
+                dp[type + "totalvolumefrom"] = list[i].totalvolumefrom;
                 res[list[i].value*100] = dp;
             }
             var ordered = {};
@@ -60,14 +63,17 @@ export class OrderbookService {
             for(var i = 0; i < list.length; i++) {
                 if (i > 0) {
                     list[i].totalvolume = list[i-1].totalvolume + list[i].volume;
+                    list[i].totalvolumefrom = list[i-1].totalvolumefrom + (list[i].volume * list[i].value);
                 }
                 else {
                     list[i].totalvolume = list[i].volume;
+                    list[i].totalvolumefrom = list[i].volume * list[i].value;
                 }
                 let dp = {};
                 dp["value"] = list[i].value;
                 dp[type + "volume"] = list[i].volume;
                 dp[type + "totalvolume"] = list[i].totalvolume;
+                dp[type + "totalvolumefrom"] = list[i].totalvolumefrom;
                 res[list[i].value*100] = dp
             }
             var ordered = {};
@@ -114,7 +120,6 @@ export class OrderbookService {
     getLastUpdated(){
         return this.lastUpdated;
     }
-
     resetLastUpdated(){
         this.lastUpdated = [];
     }

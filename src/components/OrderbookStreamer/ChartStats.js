@@ -10,21 +10,39 @@ class ChartStats extends Component {
         super(props);
         this.state = {
             updated: false,
+            priceImpactVolume: 0
         };
+        this.stats = {
+            depth: {
+                bids: {},
+                asks: {}
+            },
+            impact: {
+                buy: 0,
+                sell: 0
+            },
+            average: {
+                buy: 0,
+                sell: 0
+            }
+        }
     }
 
-    getBidDepth(bids, asks, percentage){
-        var lastBid = bids[bids.length-1];
-        var firstAsk = asks[0];
+    getMidPoint(bids, asks){
+        var lastBid = bids[0]/100;
+        var firstAsk = asks[0]/100;
+        return (parseFloat(lastBid) + ((firstAsk - lastBid )/ 2));
+    }
 
-        var midPoint = parseFloat(lastBid) + ((firstAsk - lastBid )/ 2);
+    getDepth(bids, asks, percentage){
+        var midPoint = this.getMidPoint(bids, asks);
         var lowerLimit = midPoint - (midPoint*(percentage/100));
         var upperLimit = midPoint + (midPoint*(percentage/100));
 
         var bidDepthVolFrom = 0;
         var bidDepthVolTo = 0;
         for(var bid of bids){
-            if(bid > lowerLimit){
+            if(bid/100 > lowerLimit){
                 bidDepthVolFrom += this.bidsMap[bid].bidsvolume;
                 bidDepthVolTo += this.bidsMap[bid].bidsvolume*this.bidsMap[bid].value;
             }
@@ -32,64 +50,113 @@ class ChartStats extends Component {
         var askDepthVolFrom = 0;
         var askDepthVolTo = 0;
         for(var ask of asks){
-            if(ask < upperLimit){
+            if(ask/100 < upperLimit){
                 askDepthVolFrom += this.asksMap[ask].asksvolume;
                 askDepthVolTo += this.asksMap[ask].asksvolume*this.asksMap[ask].value;
             }
         }
-        console.log(bidDepthVolFrom);
-        console.log(bidDepthVolTo);
-        console.log(askDepthVolFrom);
-        console.log(askDepthVolTo);
+        this.stats.depth = {
+            bids :{
+                to: bidDepthVolTo,
+                from: bidDepthVolFrom
+            },
+            asks :{
+                to: askDepthVolTo,
+                from: askDepthVolFrom
+            }
+        }
+    }
+
+    getPriceImpact(bids, asks){
+        if(this.state.priceImpactVolume==0){
+            this.stats.impact.buy = this.stats.impact.sell = 0;
+            return;
+        }
+        var midPoint = this.getMidPoint(bids, asks);
+        var bidAverage =0, bidTotalVol = 0;
+        var askAverage =0, askTotalVol = 0;
+
+        for(var bid of bids){
+            if(this.bidsMap[bid].bidstotalvolume > this.state.priceImpactVolume) {
+                this.stats.impact.sell = this.bidsMap[bid].value - midPoint;
+                bidAverage += ((this.state.priceImpactVolume - bidTotalVol) * this.bidsMap[bid].value)
+                bidTotalVol = this.bidsMap[bid].bidstotalvolume;
+                break;
+            }
+            bidTotalVol = this.bidsMap[bid].bidstotalvolume;
+            bidAverage += (this.bidsMap[bid].bidsvolume * this.bidsMap[bid].value);
+        }
+
+        for(var ask of asks){
+            if(this.asksMap[ask].askstotalvolume > this.state.priceImpactVolume) {
+                this.stats.impact.buy =  this.asksMap[ask].value - midPoint;
+                askAverage += ((this.state.priceImpactVolume - askTotalVol) * this.asksMap[ask].value)
+                askTotalVol = this.asksMap[ask].askstotalvolume;
+                break;
+            }
+            askTotalVol = this.asksMap[ask].askstotalvolume;
+            askAverage += (this.asksMap[ask].asksvolume * this.asksMap[ask].value);
+        }
+
+        this.stats.average.sell = bidAverage / Math.min(bidTotalVol, this.state.priceImpactVolume);
+        this.stats.average.buy = askAverage / Math.min(askTotalVol, this.state.priceImpactVolume);
     }
 
     getStats(){
-        if(!this.props.orders[0] || !this.props.orders[1]){return;}
         this.bidsMap = this.props.orders[0];
         this.asksMap = this.props.orders[1];
         var bids = Object.keys(this.props.orders[0]);
         var asks = Object.keys(this.props.orders[1]);
         bids.sort(function (a, b) {
-            return a-b;
+            return b - a;
         });
         asks.sort(function (a, b) {
-            return a-b;
+            return a - b;
         });
-
-        if( bids.length && asks.length){
-
-            this.getBidDepth(bids, asks, 10);
-
+        if (bids.length && asks.length) {
+            this.getDepth(bids, asks, 10);
         }
+        this.getPriceImpact(bids, asks, 0.5);
     }
 
-    // Calculation
-    // The calculation for market depth is simply the cumulative volume of the base asset at various percentages from the mid price.
-    // For example, the “Bid Volume 10%” for BTC/USD on Coinbase would represent the volume of all bids for BTC falling within 10% of
-    // the mid price at which the order book snapshot was taken. To calculate the depth, we would add up the volume of all bids placed
-    // within this 10% price range. Conversely, the “Ask Volume 10%” would be the volume of all asks within 10% of the mid price.
-
-    componentWillReceiveProps(props){
-        // this.state.updated = props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1;
+    handleChange = (e) =>{
+        this.setState({priceImpactVolume: e.target.value});
     }
 
     render() {
-        // this.price = this.props.order.value;
-        var stats = this.getStats();
+        if(this.props.orders){
+            this.getStats();
+        }
         return (
+            <div className="container">
+                <div className="row">
+                    <div className="col-md">
+                        <input type="text" value={this.state.priceImpactVolume} onChange={this.handleChange}/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md">
+                        <div className="stat-wrapper">
+                            <div className="stat-label">
+                                10% Bid Depth
+                            </div>
+                            <div className="stat-data">
+                                {this.stats.depth.bids.from} ( {this.stats.depth.bids.to} )
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md">
+                        {this.stats.impact.sell} /
+                        {this.stats.impact.buy}
 
-            <div className="col-md-12">
-                <div className="col-md-3">
-                    10% Bid Depth
-                </div>
-                <div className="col-md-3">
-                    {/*{this.volume}*/}
-                </div>
-                <div className="col-md-3">
-                    {/*{this.tsymPrice}*/}
-                </div>
-                <div className="col-md-3">
-                    {/*{this.totalVolume}*/}
+                    </div>
+                    <div className="col-md">
+                        {/*{this.tsymPrice}*/}
+                    </div>
+                    <div className="col-md">
+                        {this.stats.average.sell} /
+                        {this.stats.average.buy}
+                    </div>
                 </div>
             </div>
         )
