@@ -117,12 +117,29 @@ table.orderbook {
   box-shadow: none;
 }
 
+.switch-field.direction input:checked + label {
+  display: none;
+}
 .switch-field label:first-of-type {
   border-radius: 4px 0 0 4px;
 }
-
 .switch-field label:last-of-type {
   border-radius: 0 4px 4px 0;
+}
+.switch-field.direction label{
+  border-radius: 4px 0 0 4px;
+  text-align: left;
+}
+.switch-field.direction i{
+  padding: 0 10px;
+}
+.switch-field.direction {
+  float: left;
+}
+input.price-impact{
+  width: auto;
+  border-radius: 0 .25rem .25rem 0;
+  height: 35px;
 }
 
 .col-stat {

@@ -1,16 +1,20 @@
 import React, { Component } from "react";
 import {Chart} from './Chart';
 import { Utils } from '../../services/Utils';
+import 'font-awesome/css/font-awesome.min.css';
+
 const utils = new Utils();
 
 class ChartContainer extends Component {
     constructor(props) {
         super(props);
         this.toggleState = this.toggleState.bind(this);
+        this.toggleDirection = this.toggleDirection.bind(this);
         this.state = {
             updated: false,
             priceImpactVolume: 10,
-            toggle: 'sell'
+            toggle: 'sell',
+            direction: 'to'
         };
         this.stats = {
             midpoint: 0,
@@ -30,6 +34,11 @@ class ChartContainer extends Component {
     toggleState(e) {
         this.setState({
             toggle: e.target.value
+        });
+    }
+    toggleDirection(e) {
+        this.setState({
+            direction: e.target.value
         });
     }
 
@@ -80,32 +89,30 @@ class ChartContainer extends Component {
         var midpoint = this.getMidPoint(bids, asks);
         var bidAverage =0, bidTotalVol = 0;
         var askAverage =0, askTotalVol = 0;
-
+        var side = this.state.direction;
         for(var bid of bids){
-            if(this.bidsMap[bid].bidstotalvolume > this.state.priceImpactVolume) {
-                impact.sell = this.bidsMap[bid].value - midpoint;
+            impact.sell = this.bidsMap[bid].value - midpoint;
+            if(this.bidsMap[bid].bidstotalvolume[side] > this.state.priceImpactVolume) {
                 bidAverage += ((this.state.priceImpactVolume - bidTotalVol) * this.bidsMap[bid].value)
-                bidTotalVol = this.bidsMap[bid].bidstotalvolume;
+                bidTotalVol = this.bidsMap[bid].bidstotalvolume[side];
                 break;
             }
-            bidTotalVol = this.bidsMap[bid].bidstotalvolume;
+            bidTotalVol = this.bidsMap[bid].bidstotalvolume[side];
             bidAverage += (this.bidsMap[bid].bidsvolume * this.bidsMap[bid].value);
         }
-
         for(var ask of asks){
-            if(this.asksMap[ask].askstotalvolume > this.state.priceImpactVolume) {
-                impact.buy =  this.asksMap[ask].value - midpoint;
+            impact.buy = this.asksMap[ask].value - midpoint;
+            if(this.asksMap[ask].askstotalvolume[side] > this.state.priceImpactVolume) {
+                askTotalVol = this.asksMap[ask].askstotalvolume[side];
                 askAverage += ((this.state.priceImpactVolume - askTotalVol) * this.asksMap[ask].value)
-                askTotalVol = this.asksMap[ask].askstotalvolume;
                 break;
             }
-            askTotalVol = this.asksMap[ask].askstotalvolume;
+            askTotalVol = this.asksMap[ask].askstotalvolume[side];
             askAverage += (this.asksMap[ask].asksvolume * this.asksMap[ask].value);
         }
-
         impact.average = {
             sell: bidAverage / Math.min(bidTotalVol, this.state.priceImpactVolume),
-            buy: impact.averageBuyPrice = askAverage / Math.min(askTotalVol, this.state.priceImpactVolume)
+            buy: askAverage / Math.min(askTotalVol, this.state.priceImpactVolume)
         };
         return impact;
     }
@@ -125,10 +132,10 @@ class ChartContainer extends Component {
         stats.midpoint = this.getMidPoint(bids, asks);
         stats.depth = this.getDepth(bids, asks, 10);
         stats.impact = this.getPriceImpact(bids, asks, 0.5);
-        stats.bidsVolumeTo = this.bidsMap[bids[bids.length-1]].bidstotalvolume;
-        stats.bidsVolumeFrom = this.bidsMap[bids[bids.length-1]].bidstotalvolumefrom;
-        stats.asksVolumeTo = this.asksMap[asks[asks.length-1]].asksstotalvolume;
-        stats.asksVolumeFrom = this.asksMap[asks[asks.length-1]].asksstotalvolumefrom;
+        // stats.bidsVolumeTo = this.bidsMap[bids[bids.length-1]].bidstotalvolume;
+        // stats.bidsVolumeFrom = this.bidsMap[bids[bids.length-1]].bidstotalvolumefrom;
+        // stats.asksVolumeTo = this.asksMap[asks[asks.length-1]].asksstotalvolume;
+        // stats.asksVolumeFrom = this.asksMap[asks[asks.length-1]].asksstotalvolumefrom;
         this.stats = stats;
     }
 
@@ -169,7 +176,27 @@ class ChartContainer extends Component {
                             </form>
                         </div>
                         <div className="col-md">
-                            <input className="form-control" type="text" value={this.state.priceImpactVolume} onChange={this.handleChange}/>
+                            <form className="switch-field direction">
+                                <input
+                                    type="radio"
+                                    id="switch_direction_to"
+                                    name="switchToggle"
+                                    value="from"
+                                    onChange={this.toggleDirection}
+                                    checked={this.state.direction=='from'}
+                                />
+                                <label htmlFor="switch_direction_to"><i className="fa fa-exchange"></i>BTC</label>
+                                <input
+                                    type="radio"
+                                    id="switch_direction_from"
+                                    name="switchToggle"
+                                    value="to"
+                                    onChange={this.toggleDirection}
+                                    checked={this.state.direction=='to'}
+                                />
+                                <label htmlFor="switch_direction_from"><i className="fa fa-exchange"></i>USDT</label>
+                            </form>
+                            <input className="form-control price-impact" type="text" value={this.state.priceImpactVolume} onChange={this.handleChange}/>
                         </div>
                         <div className="col-md">
 
@@ -182,8 +209,8 @@ class ChartContainer extends Component {
                                     10% Bid Depth
                                 </div>
                                 <div className="stat-data">
-                                    {utils.formatNumber(this.stats.depth[this.state.toggle].from, 2, true)}
-                                    ( {utils.formatNumber(this.stats.depth[this.state.toggle].to, 2, true)} )
+                                    Ƀ {utils.formatNumber(this.stats.depth[this.state.toggle].from, 2, true)}
+                                    ( ₮ {utils.formatNumber(this.stats.depth[this.state.toggle].to, 2, true)} )
                                 </div>
                             </div>
                         </div>
@@ -193,7 +220,7 @@ class ChartContainer extends Component {
                                     Price Impact
                                 </div>
                                 <div className={`stat-data ${this.stats.impact[this.state.toggle] >= 0 ? 'up-text' : 'down-text'}`}>
-                                    {utils.formatNumber(this.stats.impact[this.state.toggle], 2, true)}
+                                    ₮ {utils.formatNumber(this.stats.impact[this.state.toggle], 3, true)}
                                 </div>
                             </div>
                         </div>
@@ -203,7 +230,7 @@ class ChartContainer extends Component {
                                     Price Impact %
                                 </div>
                                 <div className={`stat-data ${this.stats.impact[this.state.toggle] >= 0 ? 'up-text' : 'down-text'}`}>
-                                    { utils.formatNumber((this.stats.impact[this.state.toggle] / this.stats.midpoint) * 100, 2, true) || 0 }%
+                                    { utils.formatNumber((this.stats.impact[this.state.toggle] / this.stats.midpoint) * 100, 3, true) || 0 }%
                                 </div>
                             </div>
                         </div>
@@ -213,7 +240,7 @@ class ChartContainer extends Component {
                                     Average Price
                                 </div>
                                 <div className="stat-data">
-                                    {utils.formatNumber(this.stats.impact.average[this.state.toggle], 2, true)}
+                                    ₮ {utils.formatNumber(this.stats.impact.average[this.state.toggle], 2, true)}
                                 </div>
                             </div>
                         </div>

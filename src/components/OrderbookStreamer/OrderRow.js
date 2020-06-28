@@ -19,8 +19,8 @@ class OrderRow extends Component {
         this.volume = utils.formatNumber(this.volume, 6);
         this.tsymPrice = this.props.order.value * (this.props.order.bidsvolume || this.props.order.asksvolume || 0)
         this.tsymPrice = utils.formatNumber(this.tsymPrice, 4, true);
-        this.totalVolume = this.props.order.bidstotalvolumefrom || this.props.order.askstotalvolumefrom;
-        this.totalVolume = utils.formatNumber(this.totalVolume,2, true);
+        this.totalVolume = this.props.order.bidstotalvolume || this.props.order.askstotalvolume;
+        this.totalVolume = utils.formatNumber(this.totalVolume['from'],2, true);
         return (
 
             <div className={
