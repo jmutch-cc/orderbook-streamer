@@ -2,43 +2,69 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import Infinite from 'react-infinite';
 import {OrderRow} from './OrderRow';
-import { OrderbookService } from '../../services/OrderbookService';
+import { Utils } from '../../services/Utils';
+const utils = new Utils();
 
-const orderbookService = new OrderbookService();
 class OrderTable extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            orders: {},
+            totalVolume: {
+                to: 0,
+                from: 0
+            }
+        }
+    }
 
     getTableRows(props) {
-        var objs = Object.keys(props.orders);
         if(props.title==='Buy'){
-            objs.sort(function(a,b){return b-a});
+            this.orderKeys.sort(function(a,b){return b-a});
         } else {
-            objs.sort(function(a,b){return a-b});
+            this.orderKeys.sort(function(a,b){return a-b});
         }
-        return objs.map((key) => {
+        return this.orderKeys.map((key) => {
             return (
                 <OrderRow lastUpdated={props.lastUpdated} order={props.orders[key]} key={key}/>
             )
         })
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        // console.log("Should Table update?");
-        return true;
-
-    }
-
-    componentWillReceiveProps(){
-        // console.log("Will receive in table");
-    }
-
-
     render() {
         if(!this.props.orders){
             return <div/>
         }
+        var orderKeys = Object.keys(this.props.orders);
+        if(!orderKeys.length){
+            return;
+        }
+        if(this.props.title==='Buy'){
+            orderKeys.sort(function(a,b){return b-a});
+            var totalVolume = {
+                to: this.props.orders[orderKeys[orderKeys.length-1]].bidstotalvolume.to,
+                from: this.props.orders[orderKeys[orderKeys.length-1]].bidstotalvolume.from
+            };
+        } else {
+            orderKeys.sort(function(a,b){return a-b});
+            var totalVolume = {
+                to: this.props.orders[orderKeys[orderKeys.length-1]].askstotalvolume.to,
+                from: this.props.orders[orderKeys[orderKeys.length-1]].askstotalvolume.from
+            };
+        }
+        this.orderKeys = orderKeys;
         return (
         <div>
-            <h2>{this.props.title}</h2>
+            <div className={"row"}>
+                <div className="col-md">
+                    Ƀ {utils.formatNumber(totalVolume.to, 2, true)}
+                </div>
+                <div className="col-md">
+                    <h4>{this.props.title}</h4>
+                </div>
+                <div className="col-md">
+                    ₮ {utils.formatNumber(totalVolume.from, 2, true)}
+                </div>
+            </div>
             <div className="orderbook">
                 <div className="row title-row">
                     <div className="col-md">
@@ -63,7 +89,8 @@ class OrderTable extends Component {
     }
 }
 OrderTable.propTypes = {
-    title: PropTypes.string
+    title: PropTypes.string,
+    orders: PropTypes.object
 };
 
 export { OrderTable };

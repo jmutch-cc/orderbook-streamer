@@ -1,5 +1,5 @@
 import React, { Component} from 'react';
-import {ChartContainer} from './ChartContainer';
+import {Stats} from './Stats';
 import {OrderTable} from './OrderTable';
 import PropTypes from 'prop-types';
 
@@ -13,8 +13,10 @@ class Display extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps){
-    }
+    // componentDidUpdate(prevProps) {
+    //     console.log("orders", this.props.orders); //test
+    //     this.setState({ orders: this.props.orders});
+    // }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         // console.log("Should display update?");
@@ -22,9 +24,10 @@ class Display extends Component {
     }
 
     render() {
+        console.log("this.props.orders[0]", this.props.orders[0]);
         return (
             <div className="container">
-                <ChartContainer orders={this.props.orders}></ChartContainer>
+                <Stats orders={this.props.orders}></Stats>
                 <div className="row">
                     <div className="col-md-6">
                         <OrderTable orders={this.props.orders[0]} lastUpdated={this.props.lastUpdated} title='Buy' />

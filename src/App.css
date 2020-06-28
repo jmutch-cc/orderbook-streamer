@@ -46,6 +46,18 @@ table.orderbook {
 .orderbook .data-row div{
   padding-right: 37px;
 }
+.title-row div{
+  background: #F1F2F7;
+  color: #272727;
+  padding: 5px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 0;
+  font-weight: bold;
+  font-size: 13px;
+  border-right: 1px solid #DFE1EF;
+  border-bottom: 5px solid #C5CEDA;
+}
 
 @keyframes App-logo-spin {
   from {

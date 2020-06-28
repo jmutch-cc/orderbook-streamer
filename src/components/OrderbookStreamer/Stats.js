@@ -5,7 +5,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 const utils = new Utils();
 
-class ChartContainer extends Component {
+class Stats extends Component {
     constructor(props) {
         super(props);
         this.toggleState = this.toggleState.bind(this);
@@ -103,8 +103,8 @@ class ChartContainer extends Component {
         for(var ask of asks){
             impact.buy = this.asksMap[ask].value - midpoint;
             if(this.asksMap[ask].askstotalvolume[side] > this.state.priceImpactVolume) {
-                askTotalVol = this.asksMap[ask].askstotalvolume[side];
                 askAverage += ((this.state.priceImpactVolume - askTotalVol) * this.asksMap[ask].value)
+                askTotalVol = this.asksMap[ask].askstotalvolume[side];
                 break;
             }
             askTotalVol = this.asksMap[ask].askstotalvolume[side];
@@ -132,10 +132,6 @@ class ChartContainer extends Component {
         stats.midpoint = this.getMidPoint(bids, asks);
         stats.depth = this.getDepth(bids, asks, 10);
         stats.impact = this.getPriceImpact(bids, asks, 0.5);
-        // stats.bidsVolumeTo = this.bidsMap[bids[bids.length-1]].bidstotalvolume;
-        // stats.bidsVolumeFrom = this.bidsMap[bids[bids.length-1]].bidstotalvolumefrom;
-        // stats.asksVolumeTo = this.asksMap[asks[asks.length-1]].asksstotalvolume;
-        // stats.asksVolumeFrom = this.asksMap[asks[asks.length-1]].asksstotalvolumefrom;
         this.stats = stats;
     }
 
@@ -250,7 +246,7 @@ class ChartContainer extends Component {
         )
     }
 }
-ChartContainer.propTypes = {
+Stats.propTypes = {
 };
 
-export { ChartContainer };
+export { Stats };

@@ -18,9 +18,9 @@ class OrderbookStreamer extends Component {
     handleSubscribe(event) {
 
         let currentComponent = this;
-        currentComponent.setState(prevState => {
-            return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
-        });
+        // currentComponent.setState(prevState => {
+        //     return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
+        // });
         orderbookService.resetLastUpdated();
         setTimeout(function(){
             setInterval(function(){
@@ -28,11 +28,12 @@ class OrderbookStreamer extends Component {
                     return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
                 });
                 orderbookService.resetLastUpdated();
-            }, 300);
+            }, 30000);
         }, 1000);
 
 
         currentComponent.callback = (data) => {
+            console.log("calling back with data",data);
             if(data.lastUpdated){
                 this.setState(prevState => {
                     return {lastUpdated: data.lastUpdated};
@@ -40,6 +41,7 @@ class OrderbookStreamer extends Component {
             }
             if(data.orders) {
                 this.setState(prevState => {
+                    console.log(data.orders);
                     return {orders: data.orders};
                 })
             }
