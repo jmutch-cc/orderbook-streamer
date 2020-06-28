@@ -11,6 +11,7 @@ class OrderbookStreamer extends Component {
 
         this.state = {
             orders: 0,
+            stats: {},
             lastUpdated: 0,
         };
     }
@@ -19,20 +20,28 @@ class OrderbookStreamer extends Component {
 
         let currentComponent = this;
         currentComponent.setState(prevState => {
-            return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
+            return {
+                orders: orderbookService.getSnapshot(),
+                lastUpdated: orderbookService.getLastUpdated(),
+                stats: orderbookService.getStats()
+            }
         });
         orderbookService.resetLastUpdated();
-        setTimeout(function(){
-            setInterval(function(){
-                currentComponent.setState(prevState => {
-                    return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
-                });
-                orderbookService.resetLastUpdated();
-            }, 300);
-        }, 1000);
-
+        // setTimeout(function(){
+        //     setInterval(function(){
+        //         currentComponent.setState(prevState => {
+        //             return {
+        //                 orders: orderbookService.getSnapshot(),
+        //                 lastUpdated: orderbookService.getLastUpdated(),
+        //                 stats: orderbookService.getStats()
+        //             }
+        //         });
+        //         orderbookService.resetLastUpdated();
+        //     }, 30000000);
+        // }, 1000);
 
         currentComponent.callback = (data) => {
+            console.log("callback", data);
             if(data.lastUpdated){
                 this.setState(prevState => {
                     return {lastUpdated: data.lastUpdated};
@@ -43,6 +52,9 @@ class OrderbookStreamer extends Component {
                     return {orders: data.orders};
                 })
             }
+            this.setState(prevState => {
+                return {stats: data.stats};
+            })
         }
 
         orderbookService
@@ -54,6 +66,11 @@ class OrderbookStreamer extends Component {
             .unsubscribe();
     }
 
+    setSide(side){
+        console.log("side",side);
+        orderbookService.side = side;
+    }
+
     render() {
         return (
             <div>
@@ -61,7 +78,7 @@ class OrderbookStreamer extends Component {
                     subscribe={this.handleSubscribe.bind(this)}
                     unsubscribe={this.handleUnsubscribe}
                 />
-                <Display orders={this.state.orders} lastUpdated={this.state.lastUpdated}/>
+                <Display setSide={this.setSide} stats={this.state.stats} orders={this.state.orders} lastUpdated={this.state.lastUpdated}/>
             </div>
         );
     }

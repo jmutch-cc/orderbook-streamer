@@ -6,9 +6,9 @@ export class OrderbookService {
     snapshot = {0:{},1:{}};
     lastUpdated = [];
     depth = 2000000;
+    side = 'to';
 
     processData(list, type, desc) {
-        // console.log(list);
         // Convert to data points
         let res = {};
         for(var i = 0; i < list.length; i++) {
@@ -17,7 +17,6 @@ export class OrderbookService {
                 volume: Number(list[i][['Q']]),
             }
         }
-
         // Sort list just in case
         list.sort(function(a, b) {
             if (a.value > b.value) {
@@ -90,7 +89,6 @@ export class OrderbookService {
     }
 
     populateSnapshot(snapshot, callback) {
-
         snapshot.BID.map((item, key) => {
             this.snapshot[0][item.P*100] = {
                 Q: item.Q,
@@ -116,8 +114,8 @@ export class OrderbookService {
         }
         let bids = this.processData(topBids, 'bids', true);
         let asks = this.processData(topAsks, 'asks',  false);
-
-        callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated});
+        let stats = this.getStats(bids, asks);
+        callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated, stats: stats});
     }
 
     getLastUpdated(){
@@ -140,7 +138,8 @@ export class OrderbookService {
         }
         let bids = this.processData(topBids, 'bids', true);
         let asks = this.processData(topAsks, 'asks',  false);
-        return {0: bids, 1: asks};
+        let stats = this.getStats(bids, asks);
+        return {bids: bids, asks: asks, stats: stats};
     }
 
     updateSnapshot(update, callback){
@@ -160,16 +159,113 @@ export class OrderbookService {
             this.snapshot[update.SIDE][update.P*100]['Q'] = update.Q;
             this.lastUpdated.push(update.P);
         }
-        // callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated});
     }
 
-    subscribe(callback) {
+    getMidPoint(bids, asks){
+        var lastBid = bids[0]/100;
+        var firstAsk = asks[0]/100;
+        return (parseFloat(lastBid) + ((firstAsk - lastBid )/ 2));
+    }
+
+    getDepth(bids, asks, percentage){
+        var midpoint = this.getMidPoint(bids, asks);
+        var lowerLimit = midpoint - (midpoint*(percentage/100));
+        var upperLimit = midpoint + (midpoint*(percentage/100));
+
+        var bidDepthVolFrom = 0;
+        var bidDepthVolTo = 0;
+        for(var bid of bids){
+            if(bid/100 > lowerLimit){
+                bidDepthVolFrom += this.bidsMap[bid].bidsvolume;
+                bidDepthVolTo += this.bidsMap[bid].bidsvolume*this.bidsMap[bid].value;
+            }
+        }
+        var askDepthVolFrom = 0;
+        var askDepthVolTo = 0;
+        for(var ask of asks){
+            if(ask/100 < upperLimit){
+                askDepthVolFrom += this.asksMap[ask].asksvolume;
+                askDepthVolTo += this.asksMap[ask].asksvolume*this.asksMap[ask].value;
+            }
+        }
+        return {
+            sell :{
+                to: bidDepthVolTo,
+                from: bidDepthVolFrom
+            },
+            buy :{
+                to: askDepthVolTo,
+                from: askDepthVolFrom
+            }
+        }
+    }
+
+    getPriceImpact(bids, asks){
+        var impact = {buy: 0, sell:0, average:{buy: 0, sell:0}};
+        var priceImpactVolume = 10;
+        if(!priceImpactVolume){
+            return impact;
+        }
+        var midpoint = this.getMidPoint(bids, asks);
+        var bidAverage =0, bidTotalVol = 0;
+        var askAverage =0, askTotalVol = 0;
+        var side = this.side;
+        console.log("get price impact side", this.side);
+        for(var bid of bids){
+            impact.sell = this.bidsMap[bid].value - midpoint;
+            if(this.bidsMap[bid].bidstotalvolume[side] > priceImpactVolume) {
+                bidAverage += ((priceImpactVolume - bidTotalVol) * this.bidsMap[bid].value)
+                bidTotalVol = this.bidsMap[bid].bidstotalvolume[side];
+                break;
+            }
+            bidTotalVol = this.bidsMap[bid].bidstotalvolume[side];
+            bidAverage += (this.bidsMap[bid].bidsvolume * this.bidsMap[bid].value);
+        }
+        for(var ask of asks){
+            impact.buy = this.asksMap[ask].value - midpoint;
+            if(this.asksMap[ask].askstotalvolume[side] > priceImpactVolume) {
+                askTotalVol = this.asksMap[ask].askstotalvolume[side];
+                askAverage += ((priceImpactVolume - askTotalVol) * this.asksMap[ask].value)
+                break;
+            }
+            askTotalVol = this.asksMap[ask].askstotalvolume[side];
+            askAverage += (this.asksMap[ask].asksvolume * this.asksMap[ask].value);
+        }
+        impact.average = {
+            sell: bidAverage / Math.min(bidTotalVol, priceImpactVolume),
+            buy: askAverage / Math.min(askTotalVol, priceImpactVolume)
+        };
+        return impact;
+    }
+
+    getStats(bidsMap, asksMap){
+        var stats = {};
+        this.bidsMap = bidsMap;
+        this.asksMap = asksMap;
+        var bids = Object.keys(this.snapshot[0]);
+        var asks = Object.keys(this.snapshot[1]);
+        bids.sort(function (a, b) {
+            return b - a;
+        });
+        asks.sort(function (a, b) {
+            return a - b;
+        });
+        stats.midpoint = this.getMidPoint(bids, asks);
+        stats.depth = this.getDepth(bids, asks, 10);
+        stats.impact = this.getPriceImpact(bids, asks, 0.5);
+        // stats.bidsVolumeTo = this.bidsMap[bids[bids.length-1]].bidstotalvolume;
+        // stats.bidsVolumeFrom = this.bidsMap[bids[bids.length-1]].bidstotalvolumefrom;
+        // stats.asksVolumeTo = this.asksMap[asks[asks.length-1]].asksstotalvolume;
+        // stats.asksVolumeFrom = this.asksMap[asks[asks.length-1]].asksstotalvolumefrom;
+        return stats;
+    }
+
+        subscribe(callback) {
         console.log('Subscribing');
         client.onopen = () => {
             console.log('WebSocket Client Connected');
         };
         client.onmessage = (message) => {
-
             if(message.data){
                 let msg = JSON.parse(message.data);
                 // console.log(msg);

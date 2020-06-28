@@ -1,5 +1,6 @@
 import React, { Component} from 'react';
-import {ChartContainer} from './ChartContainer';
+import {Stats} from './Stats';
+import {Chart} from './Chart';
 import {OrderTable} from './OrderTable';
 import PropTypes from 'prop-types';
 
@@ -9,6 +10,7 @@ class Display extends Component {
         super(props);
         this.state = {
             orders: [],
+            stats: {},
             lastUpdated: [],
         };
     }
@@ -22,9 +24,11 @@ class Display extends Component {
     }
 
     render() {
+        console.log("displaystats", this.props.stats);
         return (
             <div className="container">
-                <ChartContainer orders={this.props.orders}></ChartContainer>
+                {/*<Chart bids={this.props.orders[0] ? Object.values(this.props.orders[0]): []} asks={this.props.orders[1] ? Object.values(this.props.orders[1]): []} />*/}
+                <Stats setSide={this.props.setSide} stats={this.props.stats}></Stats>
                 <div className="row">
                     <div className="col-md-6">
                         <OrderTable orders={this.props.orders[0]} lastUpdated={this.props.lastUpdated} title='Buy' />
