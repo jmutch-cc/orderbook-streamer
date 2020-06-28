@@ -1,7 +1,4 @@
-// import axios from 'axios';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-import { CCC } from './../ccc-streaming-utils';
-
 const client = new W3CWebSocket('wss://streamer.cryptocompare.com/v2?api_key=66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44');
 
 export class OrderbookService {

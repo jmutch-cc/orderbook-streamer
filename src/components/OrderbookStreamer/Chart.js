@@ -105,7 +105,6 @@ class Chart extends Component {
     render() {
         return (
             <div className={"row"} style={{marginTop:"20px", position:"relative"}}>
-                <h2>Chart</h2>
                 <div className="col-md-12" style={{ position: "absolute", height:"400px", width:"100%", paddingTop:"70px"}}>
                     <div className="row">
                         <div

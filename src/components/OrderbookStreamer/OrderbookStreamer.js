@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Subscription } from './Subscription';
 import { Display } from './Display';
 import { OrderbookService } from '../../services/OrderbookService';
-
 const orderbookService = new OrderbookService();
 
 class OrderbookStreamer extends Component {
@@ -29,8 +28,8 @@ class OrderbookStreamer extends Component {
                     return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
                 });
                 orderbookService.resetLastUpdated();
-            }, 1000);
-        }, 5000);
+            }, 300);
+        }, 1000);
 
 
         currentComponent.callback = (data) => {

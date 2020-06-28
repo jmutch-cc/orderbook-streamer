@@ -1,7 +1,6 @@
 import React, { Component} from 'react';
-import {Chart} from './Chart';
+import {ChartContainer} from './ChartContainer';
 import {OrderTable} from './OrderTable';
-import {ChartStats} from './ChartStats';
 import PropTypes from 'prop-types';
 
 class Display extends Component {
@@ -23,16 +22,9 @@ class Display extends Component {
     }
 
     render() {
-        // console.log("Rendering display");
         return (
             <div className="container">
-                
-                <div>
-                    <Chart bids={this.props.orders[0] ? Object.values(this.props.orders[0]): []} asks={this.props.orders[1] ? Object.values(this.props.orders[1]): []} />
-                </div>
-                <div className="row">
-                    <ChartStats orders={this.props.orders}></ChartStats>
-                </div>
+                <ChartContainer orders={this.props.orders}></ChartContainer>
                 <div className="row">
                     <div className="col-md-6">
                         <OrderTable orders={this.props.orders[0]} lastUpdated={this.props.lastUpdated} title='Buy' />

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { OrderbookService } from '../../services/OrderbookService';
-import PropTypes from 'prop-types';
-
-const orderbookService = new OrderbookService();
+import { Utils } from '../../services/Utils';
+const utils = new Utils();
 
 class OrderRow extends Component {
 
@@ -16,28 +14,28 @@ class OrderRow extends Component {
     render() {
         this.state.updated = this.props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1;
         this.price = this.props.order.value;
-        this.price = +this.price.toFixed(6);
+        this.price = utils.formatNumber(this.price, 4);
         this.volume = this.props.order.bidsvolume || this.props.order.asksvolume;
-        this.volume = +this.volume.toFixed(6);
+        this.volume = utils.formatNumber(this.volume, 6);
         this.tsymPrice = this.props.order.value * (this.props.order.bidsvolume || this.props.order.asksvolume || 0)
-        this.tsymPrice = +this.tsymPrice.toFixed(6);
-        this.totalVolume = this.props.order.bidstotalvolume || this.props.order.askstotalvolume;
-        this.totalVolume = +this.totalVolume.toFixed(6);
+        this.tsymPrice = utils.formatNumber(this.tsymPrice, 4, true);
+        this.totalVolume = this.props.order.bidstotalvolumefrom || this.props.order.askstotalvolumefrom;
+        this.totalVolume = utils.formatNumber(this.totalVolume,2, true);
         return (
 
             <div className={
-                `d-flex ${this.state.updated ? 'highlight' : ''}`
+                `row data-row ${this.state.updated ? 'highlight' : ''}`
                 }>
-                <div className="col-3">
+                <div className="col-md">
                     {this.price}
                 </div>
-                <div className="col-3">
+                <div className="col-md">
                     {this.volume}
                 </div>
-                <div className="col-3">
+                <div className="col-md">
                     {this.tsymPrice}
                 </div>
-                <div className="col-3">
+                <div className="col-md">
                     {this.totalVolume}
                 </div>
             </div>
