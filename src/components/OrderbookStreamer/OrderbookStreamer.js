@@ -5,16 +5,15 @@ import { OrderbookService } from '../../services/OrderbookService';
 const orderbookService = new OrderbookService();
 
 class OrderbookStreamer extends Component {
-
     constructor(props){
         super(props);
-
+        this.changeSubscription = this.changeSubscription.bind(this);
         this.state = {
-            orders: 0,
-            lastUpdated: 0,
-            exchange: 'Binance',
-            tSym: 'BTC',
-            fSym: 'USDT'
+            orders: {},
+            lastUpdated: [],
+            exchange: props.exchange,
+            fSym: props.fSym,
+            tSym: props.tSym
         };
         let currentComponent = this;
          setInterval(function(){
@@ -23,10 +22,10 @@ class OrderbookStreamer extends Component {
             });
             orderbookService.resetLastUpdated();
         }, 1000);
-        this.subscribe(this.state.exchange, this.state.tSym, this.state.fSym);
+        this.subscribe(this.state.exchange, this.state.fSym, this.state.tSym);
     }
 
-    subscribe(exchange, tSym, fSym){
+    subscribe(exchange, fSym, tSym){
         let currentComponent = this;
         currentComponent.callback = (data) => {
             this.setState(prevState => {
@@ -35,29 +34,33 @@ class OrderbookStreamer extends Component {
             });
             orderbookService.resetLastUpdated();
         }
-        orderbookService.subscribe( exchange, tSym, fSym, currentComponent.callback );
+        orderbookService.subscribe( exchange, fSym, tSym, currentComponent.callback );
     }
 
-    changeSubscription(event){
-        this.setState({
-            exchange: 'Bittrex',
-            tSym: 'BTC',
-            fSym: 'USD',
-        });
-        this.subscribe('Bittrex', this.state.tSym, this.state.fSym);
-    }
-
-    unsubscribe(){
+    changeSubscription(exchange, fSym, tSym){
         orderbookService.unsubscribe();
+        this.setState({
+            exchange: exchange,
+            fSym: fSym,
+            tSym: tSym,
+        });
+        this.subscribe(exchange, fSym, tSym);
     }
 
     render() {
         return (
-            <div>
+            <div className="container">
                 <Subscription
-                    newSub={this.changeSubscription.bind(this)} unsubscribe={this.unsubscribe.bind(this)}
+                    subscribe={this.changeSubscription}
+                    exchange={this.state.exchange}
+                    fSym={this.state.fSym}
+                    tSym={this.state.tSym}
                 />
-                <Display orders={this.state.orders} lastUpdated={this.state.lastUpdated}/>
+                <Display
+                    fSym={this.state.fSym}
+                    tSym={this.state.tSym}
+                    orders={this.state.orders}
+                    lastUpdated={this.state.lastUpdated}/>
             </div>
         );
     }

@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App">
         <Header title='CryptoCompare Orderbook L2 Streamer' />
-        <OrderbookStreamer lastUpdated={0}/>
+        <OrderbookStreamer exchange={'Binance'} fSym={'BTC'} tSym={'USDT'}/>
     </div>
   );
 }

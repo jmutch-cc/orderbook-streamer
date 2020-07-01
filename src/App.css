@@ -36,7 +36,11 @@ nav.header {
   margin-bottom: 20px;
 }
 
-.subscription button{
+.subscription{
+  margin: auto;
+}
+.subscription button,
+.subscription select{
   margin: 10px;
 }
 

@@ -8,12 +8,7 @@ const utils = new Utils();
 class OrderTable extends Component {
 
     getTableRows(props) {
-        if(props.title==='Buy'){
-            this.orderKeys.sort(function(a,b){return b-a});
-        } else {
-            this.orderKeys.sort(function(a,b){return a-b});
-        }
-        return this.orderKeys.map((key) => {
+        return this.props.keys.map((key) => {
             return (
                 <OrderRow lastUpdated={props.lastUpdated} order={props.orders[key]} key={key}/>
             )
@@ -21,38 +16,31 @@ class OrderTable extends Component {
     }
 
     render() {
-        if(!this.props.orders){
+        if(!this.props.orders || !this.props.keys.length){
             return <div/>
         }
-        var orderKeys = Object.keys(this.props.orders);
-        if(!orderKeys.length){
-            return <div/>;
-        }
-        if(this.props.title==='Buy'){
-            orderKeys.sort(function(a,b){return b-a});
+        if(this.props.title == 'Buy'){
             var totalVolume = {
-                to: this.props.orders[orderKeys[orderKeys.length-1]].bidstotalvolume.to,
-                from: this.props.orders[orderKeys[orderKeys.length-1]].bidstotalvolume.from
+                to: this.props.orders[this.props.keys[this.props.keys.length-1]].bidstotalvolume.to,
+                from: this.props.orders[this.props.keys[this.props.keys.length-1]].bidstotalvolume.from
             };
         } else {
-            orderKeys.sort(function(a,b){return a-b});
             var totalVolume = {
-                to: this.props.orders[orderKeys[orderKeys.length-1]].askstotalvolume.to,
-                from: this.props.orders[orderKeys[orderKeys.length-1]].askstotalvolume.from
+                to: this.props.orders[this.props.keys[this.props.keys.length-1]].askstotalvolume.to,
+                from: this.props.orders[this.props.keys[this.props.keys.length-1]].askstotalvolume.from
             };
         }
-        this.orderKeys = orderKeys;
         return (
         <div>
             <div className={"row"}>
                 <div className="col-md">
-                    Ƀ {utils.formatNumber(totalVolume.to, 2, true)}
+                    {this.props.fSym} {utils.formatNumber(totalVolume.to, 2, true)}
                 </div>
                 <div className="col-md">
                     <h4>{this.props.title}</h4>
                 </div>
                 <div className="col-md">
-                    ₮ {utils.formatNumber(totalVolume.from, 2, true)}
+                    {this.props.tSym} {utils.formatNumber(totalVolume.from, 2, true)}
                 </div>
             </div>
             <div className="orderbook">
@@ -61,13 +49,13 @@ class OrderTable extends Component {
                         Price
                     </div>
                     <div className="col-md">
-                        BTC
+                        {this.props.fSym}
                     </div>
                     <div className="col-md">
-                        USDT
+                        {this.props.tSym}
                     </div>
                     <div className="col-md">
-                        Sum(USDT)
+                        Sum({this.props.tSym})
                     </div>
                 </div>
                 <Infinite containerHeight={400} elementHeight={21}>

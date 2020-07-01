@@ -213,8 +213,8 @@ class Stats extends Component {
                                     10% Bid Depth
                                 </div>
                                 <div className="stat-data">
-                                    Ƀ {utils.formatNumber(this.stats.depth[this.state.toggle].from, 2, true)}
-                                    ( ₮ {utils.formatNumber(this.stats.depth[this.state.toggle].to, 2, true)} )
+                                    {this.props.fSym} {utils.formatNumber(this.stats.depth[this.state.toggle].from, 2, true)}
+                                    ( {this.props.tSym} {utils.formatNumber(this.stats.depth[this.state.toggle].to, 2, true)} )
                                 </div>
                             </div>
                         </div>
@@ -224,7 +224,7 @@ class Stats extends Component {
                                     Price Impact
                                 </div>
                                 <div className={`stat-data ${this.stats.impact[this.state.toggle] >= 0 ? 'up-text' : 'down-text'}`}>
-                                    ₮ {utils.formatNumber(this.stats.impact[this.state.toggle], 3, true)}
+                                    {this.props.tSym} {utils.formatNumber(this.stats.impact[this.state.toggle], 3, true)}
                                 </div>
                             </div>
                         </div>
@@ -244,7 +244,7 @@ class Stats extends Component {
                                     Average Price
                                 </div>
                                 <div className="stat-data">
-                                    ₮ {utils.formatNumber(this.stats.impact.average[this.state.toggle], 2, true)}
+                                    {this.props.tSym} {utils.formatNumber(this.stats.impact.average[this.state.toggle], 2, true)}
                                 </div>
                             </div>
                         </div>

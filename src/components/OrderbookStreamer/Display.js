@@ -13,26 +13,35 @@ class Display extends Component {
         };
     }
 
-    // componentDidUpdate(prevProps) {
-    //     console.log("orders", this.props.orders); //test
-    //     this.setState({ orders: this.props.orders});
-    // }
-
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        // console.log("Should display update?");
-        return true;
-    }
-
     render() {
+        if(!Object.keys(this.props.orders).length){
+            return <div/>;
+        }
+        var bidKeys = Object.keys(this.props.orders[0]);
+        var askKeys = Object.keys(this.props.orders[1]);
+        bidKeys.sort(function(a,b){return b-a});
+        askKeys.sort(function(a,b){return a-b});
         return (
             <div className="container">
-                <Stats orders={this.props.orders}></Stats>
+                <Stats fSym={this.props.fSym} tSym={this.props.tSym} orders={this.props.orders}></Stats>
                 <div className="row">
                     <div className="col-md-6">
-                        <OrderTable orders={this.props.orders[0]} lastUpdated={this.props.lastUpdated} title='Buy' />
+                        <OrderTable
+                            fSym={this.props.fSym}
+                            tSym={this.props.tSym}
+                            orders={this.props.orders[0]}
+                            keys={bidKeys}
+                            lastUpdated={this.props.lastUpdated}
+                            title='Buy' />
                     </div>
                     <div className="col-md-6">
-                        <OrderTable orders={this.props.orders[1]} lastUpdated={this.props.lastUpdated} title='Sell'/>
+                        <OrderTable
+                            fSym={this.props.fSym}
+                            tSym={this.props.tSym}
+                            orders={this.props.orders[1]}
+                            keys={askKeys}
+                            lastUpdated={this.props.lastUpdated}
+                            title='Sell'/>
                     </div>
                 </div>
             </div>

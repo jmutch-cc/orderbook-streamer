@@ -144,13 +144,13 @@ export class OrderbookService {
         }
     }
 
-    subscribe(exchange, tSym, fSym, callback) {
+    subscribe(exchange, fSym, tSym, callback) {
         console.log('Subscribing',exchange, tSym, fSym, client);
         client = client == null ? new W3CWebSocket(clientUrl) : client;
         client.onopen = () => {
             client.send(JSON.stringify({
                 action: 'SubAdd',
-                subs: ['8~'+exchange+'~'+tSym+'~'+fSym],
+                subs: ['8~'+exchange+'~'+fSym+'~'+tSym],
                 api_key: '66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44',
             }));
         };
