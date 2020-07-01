@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/orderbook-streamer/precache-manifest.bca28714847d613442aa20b6f7c689c6.js"
+  "/orderbook-streamer/precache-manifest.4763d4540a55cda033ab1564ecf0f9eb.js"
 );
 
 self.addEventListener('message', (event) => {
