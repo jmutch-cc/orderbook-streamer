@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 const Subscription = (props) => (
     <div className="subscription">
-        <span onClick={props.subscribe}>
-            <button type="button" className="btn btn-primary">Subscribe</button>
+        <span onClick={props.newSub} value="binance">
+            <button type="button" className="btn btn-primary">Binance</button>
         </span>
-        <span onClick={props.unsubscribe}>
-            <button type="button" className="btn btn-secondary">Unsubscribe</button>
+        <span onClick={props.unsubscribe} value="bittrex">
+            <button type="button" className="btn btn-secondary">Bittrex</button>
         </span>
     </div>
 );

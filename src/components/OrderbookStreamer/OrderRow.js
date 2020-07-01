@@ -7,36 +7,37 @@ class OrderRow extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            updated: false,
         };
     }
 
     render() {
-        this.state.updated = this.props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1;
+        if(!this.updated && this.props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1){
+            this.updated = true;
+            var c = this;
+            setTimeout(function(){
+                c.updated = false;
+            }, 100);
+        }
         this.price = this.props.order.value;
-        this.price = utils.formatNumber(this.price, 4);
         this.volume = this.props.order.bidsvolume || this.props.order.asksvolume;
-        this.volume = utils.formatNumber(this.volume, 6);
         this.tsymPrice = this.props.order.value * (this.props.order.bidsvolume || this.props.order.asksvolume || 0)
-        this.tsymPrice = utils.formatNumber(this.tsymPrice, 4, true);
         this.totalVolume = this.props.order.bidstotalvolume || this.props.order.askstotalvolume;
-        this.totalVolume = utils.formatNumber(this.totalVolume['from'],2, true);
         return (
 
             <div className={
-                `row data-row ${this.state.updated ? 'highlight' : ''}`
+                `row data-row ${this.updated ? 'highlight' : ''}`
                 }>
                 <div className="col-md">
-                    {this.price}
+                    {utils.formatNumber(this.price, 2)}
                 </div>
                 <div className="col-md">
-                    {this.volume}
+                    {utils.formatNumber(this.volume, 6)}
                 </div>
                 <div className="col-md">
-                    {this.tsymPrice}
+                    {utils.formatNumber(this.tsymPrice, 4, true)}
                 </div>
                 <div className="col-md">
-                    {this.totalVolume}
+                    {utils.formatNumber(this.totalVolume['from'],2, true)}
                 </div>
             </div>
         )

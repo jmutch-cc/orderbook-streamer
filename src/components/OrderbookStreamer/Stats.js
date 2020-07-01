@@ -17,7 +17,11 @@ class Stats extends Component {
             direction: 'to'
         };
         this.stats = {
-            midpoint: 0,
+            spread: {
+                midpoint: 0,
+                high: 0,
+                low: 0
+            },
             depth: {
                 bids: {},
                 asks: {}
@@ -42,14 +46,19 @@ class Stats extends Component {
         });
     }
 
-    getMidPoint(bids, asks){
+    getSpread(bids, asks){
         var lastBid = bids[0]/100;
         var firstAsk = asks[0]/100;
-        return (parseFloat(lastBid) + ((firstAsk - lastBid )/ 2));
+        var midpoint = parseFloat(lastBid) + ((firstAsk - lastBid )/ 2);
+        return {
+            high: lastBid,
+            low: firstAsk,
+            midpoint: midpoint
+        }
     }
 
     getDepth(bids, asks, percentage){
-        var midpoint = this.getMidPoint(bids, asks);
+        var midpoint = this.getSpread(bids, asks).midpoint;
         var lowerLimit = midpoint - (midpoint*(percentage/100));
         var upperLimit = midpoint + (midpoint*(percentage/100));
 
@@ -86,18 +95,18 @@ class Stats extends Component {
         if(!this.state.priceImpactVolume){
             return impact;
         }
-        var midpoint = this.getMidPoint(bids, asks);
+        var midpoint = this.getSpread(bids, asks).midpoint;
         var bidAverage =0, bidTotalVol = 0;
         var askAverage =0, askTotalVol = 0;
         var side = this.state.direction;
         for(var bid of bids){
             impact.sell = this.bidsMap[bid].value - midpoint;
             if(this.bidsMap[bid].bidstotalvolume[side] > this.state.priceImpactVolume) {
-                bidAverage += ((this.state.priceImpactVolume - bidTotalVol) * this.bidsMap[bid].value)
+                bidAverage += (this.state.priceImpactVolume - bidTotalVol) * this.bidsMap[bid].value;
                 bidTotalVol = this.bidsMap[bid].bidstotalvolume[side];
                 break;
             }
-            bidTotalVol = this.bidsMap[bid].bidstotalvolume[side];
+            bidTotalVol = this.bidsMap[bid].bidstotalvolume.to;
             bidAverage += (this.bidsMap[bid].bidsvolume * this.bidsMap[bid].value);
         }
         for(var ask of asks){
@@ -129,7 +138,7 @@ class Stats extends Component {
         asks.sort(function (a, b) {
             return a - b;
         });
-        stats.midpoint = this.getMidPoint(bids, asks);
+        stats.spread = this.getSpread(bids, asks);
         stats.depth = this.getDepth(bids, asks, 10);
         stats.impact = this.getPriceImpact(bids, asks, 0.5);
         this.stats = stats;
@@ -195,7 +204,6 @@ class Stats extends Component {
                             <input className="form-control price-impact" type="text" value={this.state.priceImpactVolume} onChange={this.handleChange}/>
                         </div>
                         <div className="col-md">
-
                         </div>
                     </div>
                     <div className="row">
@@ -226,7 +234,7 @@ class Stats extends Component {
                                     Price Impact %
                                 </div>
                                 <div className={`stat-data ${this.stats.impact[this.state.toggle] >= 0 ? 'up-text' : 'down-text'}`}>
-                                    { utils.formatNumber((this.stats.impact[this.state.toggle] / this.stats.midpoint) * 100, 3, true) || 0 }%
+                                    { utils.formatNumber((this.stats.impact[this.state.toggle] / this.stats.spread.midpoint) * 100, 3, true) || 0 }%
                                 </div>
                             </div>
                         </div>
@@ -239,6 +247,26 @@ class Stats extends Component {
                                     ₮ {utils.formatNumber(this.stats.impact.average[this.state.toggle], 2, true)}
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className={"col-md"}>
+                        </div>
+                        <div className="col-md">
+                            Highest bid: <span className={"up-text"}>{utils.formatNumber(this.stats.spread.high, 2, true)}</span>
+                        </div>
+                        <div className="col-md">
+                            <div>
+                                Midpoint: {utils.formatNumber(this.stats.spread.midpoint, 3, true)}
+                            </div>
+                            <div>
+                                Spread: {utils.formatNumber(this.stats.spread.low - this.stats.spread.high, 3, true)}
+                            </div>
+                        </div>
+                        <div className="col-md">
+                            Lowest ask: <span className={"down-text"}>{utils.formatNumber(this.stats.spread.low, 2, true)}</span>
+                        </div>
+                        <div className={"col-md"}>
                         </div>
                     </div>
                 </div>

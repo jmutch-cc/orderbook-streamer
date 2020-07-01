@@ -6,16 +6,6 @@ import { Utils } from '../../services/Utils';
 const utils = new Utils();
 
 class OrderTable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            orders: {},
-            totalVolume: {
-                to: 0,
-                from: 0
-            }
-        }
-    }
 
     getTableRows(props) {
         if(props.title==='Buy'){
@@ -36,7 +26,7 @@ class OrderTable extends Component {
         }
         var orderKeys = Object.keys(this.props.orders);
         if(!orderKeys.length){
-            return;
+            return <div/>;
         }
         if(this.props.title==='Buy'){
             orderKeys.sort(function(a,b){return b-a});
@@ -89,8 +79,7 @@ class OrderTable extends Component {
     }
 }
 OrderTable.propTypes = {
-    title: PropTypes.string,
-    orders: PropTypes.object
+    title: PropTypes.string
 };
 
 export { OrderTable };

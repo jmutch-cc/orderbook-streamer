@@ -12,56 +12,50 @@ class OrderbookStreamer extends Component {
         this.state = {
             orders: 0,
             lastUpdated: 0,
+            exchange: 'Binance',
+            tSym: 'BTC',
+            fSym: 'USDT'
         };
-    }
-
-    handleSubscribe(event) {
-
         let currentComponent = this;
-        // currentComponent.setState(prevState => {
-        //     return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
-        // });
-        orderbookService.resetLastUpdated();
-        setTimeout(function(){
-            setInterval(function(){
-                currentComponent.setState(prevState => {
-                    return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
-                });
-                orderbookService.resetLastUpdated();
-            }, 30000);
+         setInterval(function(){
+            currentComponent.setState(prevState => {
+                return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
+            });
+            orderbookService.resetLastUpdated();
         }, 1000);
-
-
-        currentComponent.callback = (data) => {
-            console.log("calling back with data",data);
-            if(data.lastUpdated){
-                this.setState(prevState => {
-                    return {lastUpdated: data.lastUpdated};
-                })
-            }
-            if(data.orders) {
-                this.setState(prevState => {
-                    console.log(data.orders);
-                    return {orders: data.orders};
-                })
-            }
-        }
-
-        orderbookService
-            .subscribe( currentComponent.callback );
+        this.subscribe(this.state.exchange, this.state.tSym, this.state.fSym);
     }
 
-    handleUnsubscribe(event) {
-        orderbookService
-            .unsubscribe();
+    subscribe(exchange, tSym, fSym){
+        let currentComponent = this;
+        currentComponent.callback = (data) => {
+            this.setState(prevState => {
+                return {orders: data.orders,
+                    lastUpdated: orderbookService.getLastUpdated()};
+            });
+            orderbookService.resetLastUpdated();
+        }
+        orderbookService.subscribe( exchange, tSym, fSym, currentComponent.callback );
+    }
+
+    changeSubscription(event){
+        this.setState({
+            exchange: 'Bittrex',
+            tSym: 'BTC',
+            fSym: 'USD',
+        });
+        this.subscribe('Bittrex', this.state.tSym, this.state.fSym);
+    }
+
+    unsubscribe(){
+        orderbookService.unsubscribe();
     }
 
     render() {
         return (
             <div>
                 <Subscription
-                    subscribe={this.handleSubscribe.bind(this)}
-                    unsubscribe={this.handleUnsubscribe}
+                    newSub={this.changeSubscription.bind(this)} unsubscribe={this.unsubscribe.bind(this)}
                 />
                 <Display orders={this.state.orders} lastUpdated={this.state.lastUpdated}/>
             </div>

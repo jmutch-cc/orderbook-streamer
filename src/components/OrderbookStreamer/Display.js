@@ -24,7 +24,6 @@ class Display extends Component {
     }
 
     render() {
-        console.log("this.props.orders[0]", this.props.orders[0]);
         return (
             <div className="container">
                 <Stats orders={this.props.orders}></Stats>

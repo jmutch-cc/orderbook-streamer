@@ -1,5 +1,6 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const client = new W3CWebSocket('wss://streamer.cryptocompare.com/v2?api_key=66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44');
+const clientUrl = 'wss://streamer.cryptocompare.com/v2?api_key=66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44';
+let client = new W3CWebSocket(clientUrl);
 
 export class OrderbookService {
 
@@ -8,7 +9,6 @@ export class OrderbookService {
     depth = 2000000;
 
     processData(list, type, desc) {
-        // console.log(list);
         // Convert to data points
         let res = {};
         for(var i = 0; i < list.length; i++) {
@@ -17,7 +17,6 @@ export class OrderbookService {
                 volume: Number(list[i][['Q']]),
             }
         }
-
         // Sort list just in case
         list.sort(function(a, b) {
             if (a.value > b.value) {
@@ -30,7 +29,6 @@ export class OrderbookService {
                 return 0;
             }
         });
-
         // Calculate cummulative volume
         if (desc) {
             for(var i = list.length - 1; i >= 0; i--) {
@@ -90,7 +88,6 @@ export class OrderbookService {
     }
 
     populateSnapshot(snapshot, callback) {
-
         snapshot.BID.map((item, key) => {
             this.snapshot[0][item.P*100] = {
                 Q: item.Q,
@@ -103,21 +100,7 @@ export class OrderbookService {
                 P: String(item.P)
             };
         });
-
-        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-this.depth);
-        var topBids = [];
-        for(var bidKey of bidKeys){
-            topBids.push(this.snapshot[0][bidKey]);
-        }
-        var askKeys = Object.keys(this.snapshot[1]).slice(0,this.depth);
-        var topAsks = [];
-        for(var askKey of askKeys){
-            topAsks.push(this.snapshot[1][askKey]);
-        }
-        let bids = this.processData(topBids, 'bids', true);
-        let asks = this.processData(topAsks, 'asks',  false);
-
-        callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated});
+        callback({orders: this.getSnapshot(), lastUpdated: this.lastUpdated});
     }
 
     getLastUpdated(){
@@ -153,23 +136,25 @@ export class OrderbookService {
             return;
         }
         if(update.ACTION == 2){
-           // this.snapshot[update.SIDE][update.P]['Q'] = 0;
            delete this.snapshot[update.SIDE][update.P*100];
         }
         if(update.ACTION == 4){
             this.snapshot[update.SIDE][update.P*100]['Q'] = update.Q;
             this.lastUpdated.push(update.P);
         }
-        // callback({orders: {0: bids, 1: asks}, lastUpdated: this.lastUpdated});
     }
 
-    subscribe(callback) {
-        console.log('Subscribing');
+    subscribe(exchange, tSym, fSym, callback) {
+        console.log('Subscribing',exchange, tSym, fSym, client);
+        client = client == null ? new W3CWebSocket(clientUrl) : client;
         client.onopen = () => {
-            console.log('WebSocket Client Connected');
+            client.send(JSON.stringify({
+                action: 'SubAdd',
+                subs: ['8~'+exchange+'~'+tSym+'~'+fSym],
+                api_key: '66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44',
+            }));
         };
         client.onmessage = (message) => {
-
             if(message.data){
                 let msg = JSON.parse(message.data);
                 // console.log(msg);
@@ -177,19 +162,15 @@ export class OrderbookService {
                     this.populateSnapshot(msg, callback);
                 }
                 if(msg.TYPE == 8){
-                    this.updateSnapshot(msg, callback);
+                    this.updateSnapshot(msg);
                 }
             }
         };
-        client.send(JSON.stringify({
-            action: 'SubAdd',
-            subs: ["8~Binance~BTC~USDT"],
-            api_key: '66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44',
-        }));
     }
 
     unsubscribe(currency) {
         console.log('Unsubscribing');
         client.close();
+        client = null;
     }
 }
