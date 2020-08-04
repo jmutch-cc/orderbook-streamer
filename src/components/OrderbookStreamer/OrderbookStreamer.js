@@ -21,7 +21,7 @@ class OrderbookStreamer extends Component {
                 return { orders: orderbookService.getSnapshot(), lastUpdated: orderbookService.getLastUpdated() }
             });
             orderbookService.resetLastUpdated();
-        }, 1000);
+        }, 150);
         this.subscribe(this.state.exchange, this.state.fSym, this.state.tSym);
     }
 

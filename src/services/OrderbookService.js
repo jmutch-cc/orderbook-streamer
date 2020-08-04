@@ -1,5 +1,6 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const clientUrl = 'wss://streamer.cryptocompare.com/v2?api_key=66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44';
+const apiKey = 'df1c3574c94e2c8e04a8c74b07a60b6d2e0279f5a209d81c80973d7bffdd3908'
+const clientUrl = 'wss://streamer.cryptocompare.com/v2?api_key=' + apiKey;
 let client = new W3CWebSocket(clientUrl);
 
 export class OrderbookService {
@@ -11,7 +12,8 @@ export class OrderbookService {
     processData(list, type, desc) {
         // Convert to data points
         let res = {};
-        for(var i = 0; i < list.length; i++) {
+        let ordered = {};
+        for(let i = 0; i < list.length; i++) {
             list[i] = {
                 value: Number(list[i]['P']),
                 volume: Number(list[i][['Q']]),
@@ -31,7 +33,7 @@ export class OrderbookService {
         });
         // Calculate cummulative volume
         if (desc) {
-            for(var i = list.length - 1; i >= 0; i--) {
+            for(let i = list.length - 1; i >= 0; i--) {
                 if (i < (list.length - 1)) {
                     list[i].totalvolume = {
                         to: list[i+1].totalvolume.to + list[i].volume,
@@ -50,7 +52,7 @@ export class OrderbookService {
                 dp[type + "totalvolume"] = list[i].totalvolume;
                 res[list[i].value*100] = dp;
             }
-            var ordered = {};
+            ordered = {};
             Object.keys(res).sort(function (a, b) {
                 return a-b;
             }).forEach(function(key) {
@@ -58,7 +60,7 @@ export class OrderbookService {
             });
         }
         else {
-            for(var i = 0; i < list.length; i++) {
+            for(let i = 0; i < list.length; i++) {
                 if (i > 0) {
                     list[i].totalvolume = {
                         to: list[i-1].totalvolume.to + list[i].volume,
@@ -77,7 +79,7 @@ export class OrderbookService {
                 dp[type + "totalvolume"] = list[i].totalvolume;
                 res[list[i].value*100] = dp
             }
-            var ordered = {};
+            ordered = {};
             Object.keys(res).sort(function (a, b) {
                 return b-a;
             }).forEach(function(key) {
@@ -109,16 +111,18 @@ export class OrderbookService {
     resetLastUpdated(){
         this.lastUpdated = [];
     }
-
+    resetSnapshot() {
+        this.snapshot = {0: {}, 1: {}};
+    }
     getSnapshot(){
-        var bidKeys = Object.keys(this.snapshot[0]).sort().slice(-this.depth);
-        var topBids = [];
-        for(var bidKey of bidKeys){
+        let bidKeys = Object.keys(this.snapshot[0]).sort().slice(-this.depth);
+        let topBids = [];
+        for(let bidKey of bidKeys){
             topBids.push(this.snapshot[0][bidKey]);
         }
-        var askKeys = Object.keys(this.snapshot[1]).slice(0,this.depth);
-        var topAsks = [];
-        for(var askKey of askKeys){
+        let askKeys = Object.keys(this.snapshot[1]).slice(0,this.depth);
+        let topAsks = [];
+        for(let askKey of askKeys){
             topAsks.push(this.snapshot[1][askKey]);
         }
         let bids = this.processData(topBids, 'bids', true);
@@ -127,18 +131,18 @@ export class OrderbookService {
     }
 
     updateSnapshot(update, callback){
-        if(update.ACTION == 1){
+        if(update.ACTION === 1){
             this.snapshot[update.SIDE][update.P*100] = {'P': update.P, 'Q': update.Q};
             this.lastUpdated.push(update.P);
         }
-        if(this.snapshot[update.SIDE][update.P*100] == undefined){
+        if(this.snapshot[update.SIDE][update.P*100] === undefined){
             console.error("No price ", update.P, " found on side ", update.SIDE, ' to perform action ', update.ACTION);
             return;
         }
-        if(update.ACTION == 2){
+        if(update.ACTION === 2){
            delete this.snapshot[update.SIDE][update.P*100];
         }
-        if(update.ACTION == 4){
+        if(update.ACTION === 4){
             this.snapshot[update.SIDE][update.P*100]['Q'] = update.Q;
             this.lastUpdated.push(update.P);
         }
@@ -151,17 +155,17 @@ export class OrderbookService {
             client.send(JSON.stringify({
                 action: 'SubAdd',
                 subs: ['8~'+exchange+'~'+fSym+'~'+tSym],
-                api_key: '66cdac0fc6a565b41a9ecd3549784e14fdc851c2f2bc88f7f1f18019b170cd44',
+                api_key: apiKey,
             }));
         };
         client.onmessage = (message) => {
             if(message.data){
                 let msg = JSON.parse(message.data);
                 // console.log(msg);
-                if(msg.TYPE == 9){
+                if(msg.TYPE === '9'){
                     this.populateSnapshot(msg, callback);
                 }
-                if(msg.TYPE == 8){
+                if(msg.TYPE === '8'){
                     this.updateSnapshot(msg);
                 }
             }
@@ -170,6 +174,8 @@ export class OrderbookService {
 
     unsubscribe(currency) {
         console.log('Unsubscribing');
+        this.resetLastUpdated();
+        this.resetSnapshot();
         client.close();
         client = null;
     }

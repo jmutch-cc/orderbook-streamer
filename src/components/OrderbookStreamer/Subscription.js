@@ -20,7 +20,7 @@ class Subscription extends Component {
     }
 
     componentDidMount() {
-        axios.get(`https://min-api.cryptocompare.com/data/v4/all/exchanges`)
+        axios.get(`https://min-api.cryptocompare.com/data/v4/all/exchanges?topTier=true`)
             .then(res => {
                 this.setState({ exchanges: res.data.Data.exchanges });
                 this.setState({

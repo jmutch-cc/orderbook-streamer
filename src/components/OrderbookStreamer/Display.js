@@ -51,6 +51,11 @@ class Display extends Component {
 
 
 Display.propTypes = {
+    orders: PropTypes.object.isRequired,
+    keys: PropTypes.array,
+    lastUpdated: PropTypes.array.isRequired,
+    fSym: PropTypes.string.isRequired,
+    tSym: PropTypes.string.isRequired,
 };
 
 export { Display };

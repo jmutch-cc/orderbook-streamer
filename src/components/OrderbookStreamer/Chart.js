@@ -92,10 +92,6 @@ class Chart extends Component {
         }
     }
 
-    componentDidMount() {
-        // this.doChart();
-    }
-
     componentWillUnmount() {
         if (this.chart) {
             this.chart.dispose();
@@ -141,6 +137,8 @@ class Chart extends Component {
 }
 
 Chart.propTypes = {
+    orders: PropTypes.array.isRequired,
+    keys: PropTypes.array.isRequired,
 };
 
 export { Chart };
