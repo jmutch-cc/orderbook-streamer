@@ -78,8 +78,7 @@ class Subscription extends Component {
 }
 
 Subscription.propTypes = {
-    subscribe: PropTypes.func,
-    unsubscribe: PropTypes.func
+    subscribe: PropTypes.func.isRequired,
 };
 
 export { Subscription };

@@ -17,8 +17,8 @@ class Display extends Component {
         if(!Object.keys(this.props.orders).length){
             return <div/>;
         }
-        var bidKeys = Object.keys(this.props.orders[0]);
-        var askKeys = Object.keys(this.props.orders[1]);
+        let bidKeys = Object.keys(this.props.orders[0]);
+        let askKeys = Object.keys(this.props.orders[1]);
         bidKeys.sort(function(a,b){return b-a});
         askKeys.sort(function(a,b){return a-b});
         return (
@@ -48,7 +48,6 @@ class Display extends Component {
         )
     }
 }
-
 
 Display.propTypes = {
     orders: PropTypes.object.isRequired,

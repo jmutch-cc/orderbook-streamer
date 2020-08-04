@@ -16,16 +16,17 @@ class OrderTable extends Component {
     }
 
     render() {
+        let totalVolume;
         if(!this.props.orders || !this.props.keys.length){
             return <div/>
         }
-        if(this.props.title == 'Buy'){
-            var totalVolume = {
+        if(this.props.title === 'Buy'){
+            totalVolume = {
                 to: this.props.orders[this.props.keys[this.props.keys.length-1]].bidstotalvolume.to,
                 from: this.props.orders[this.props.keys[this.props.keys.length-1]].bidstotalvolume.from
             };
         } else {
-            var totalVolume = {
+            totalVolume = {
                 to: this.props.orders[this.props.keys[this.props.keys.length-1]].askstotalvolume.to,
                 from: this.props.orders[this.props.keys[this.props.keys.length-1]].askstotalvolume.from
             };
@@ -67,7 +68,11 @@ class OrderTable extends Component {
     }
 }
 OrderTable.propTypes = {
-    title: PropTypes.string
+    title: PropTypes.string.isRequired,
+    fSym: PropTypes.string.isRequired,
+    tSym: PropTypes.string.isRequired,
+    keys: PropTypes.array.isRequired,
+    orders: PropTypes.object.isRequired
 };
 
 export { OrderTable };

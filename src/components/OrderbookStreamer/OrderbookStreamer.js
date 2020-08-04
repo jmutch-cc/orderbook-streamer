@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Subscription } from './Subscription';
 import { Display } from './Display';
 import { OrderbookService } from '../../services/OrderbookService';
+import PropTypes from 'prop-types';
 const orderbookService = new OrderbookService();
 
 class OrderbookStreamer extends Component {
@@ -65,5 +66,11 @@ class OrderbookStreamer extends Component {
         );
     }
 }
+
+OrderbookStreamer.propTypes = {
+    exchange: PropTypes.string.isRequired,
+    fSym: PropTypes.string.isRequired,
+    tSym: PropTypes.string.isRequired,
+};
 
 export { OrderbookStreamer };

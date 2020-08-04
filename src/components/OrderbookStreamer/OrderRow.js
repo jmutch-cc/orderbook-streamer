@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Utils } from '../../services/Utils';
+import PropTypes from 'prop-types';
 const utils = new Utils();
 
 class OrderRow extends Component {
@@ -13,7 +14,7 @@ class OrderRow extends Component {
     render() {
         if(!this.updated && this.props.lastUpdated.indexOf(Number(this.props.order.value)) !== -1){
             this.updated = true;
-            var c = this;
+            let c = this;
             setTimeout(function(){
                 c.updated = false;
             }, 100);
@@ -43,7 +44,10 @@ class OrderRow extends Component {
         )
     }
 }
+
 OrderRow.propTypes = {
+    lastUpdated: PropTypes.array.isRequired,
+    order: PropTypes.object.isRequired,
 };
 
 export { OrderRow };

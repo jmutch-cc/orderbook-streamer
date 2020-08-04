@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import {Chart} from './Chart';
 import { Utils } from '../../services/Utils';
+import PropTypes from 'prop-types';
 import 'font-awesome/css/font-awesome.min.css';
 
 const utils = new Utils();
@@ -47,9 +47,9 @@ class Stats extends Component {
     }
 
     getSpread(bids, asks){
-        var lastBid = bids[0]/100;
-        var firstAsk = asks[0]/100;
-        var midpoint = parseFloat(lastBid) + ((firstAsk - lastBid )/ 2);
+        let lastBid = bids[0]/100;
+        let firstAsk = asks[0]/100;
+        let midpoint = parseFloat(lastBid) + ((firstAsk - lastBid )/ 2);
         return {
             high: lastBid,
             low: firstAsk,
@@ -58,21 +58,21 @@ class Stats extends Component {
     }
 
     getDepth(bids, asks, percentage){
-        var midpoint = this.getSpread(bids, asks).midpoint;
-        var lowerLimit = midpoint - (midpoint*(percentage/100));
-        var upperLimit = midpoint + (midpoint*(percentage/100));
+        let midpoint = this.getSpread(bids, asks).midpoint;
+        let lowerLimit = midpoint - (midpoint*(percentage/100));
+        let upperLimit = midpoint + (midpoint*(percentage/100));
 
-        var bidDepthVolFrom = 0;
-        var bidDepthVolTo = 0;
-        for(var bid of bids){
+        let bidDepthVolFrom = 0;
+        let bidDepthVolTo = 0;
+        for(let bid of bids){
             if(bid/100 > lowerLimit){
                 bidDepthVolFrom += this.bidsMap[bid].bidsvolume;
                 bidDepthVolTo += this.bidsMap[bid].bidsvolume*this.bidsMap[bid].value;
             }
         }
-        var askDepthVolFrom = 0;
-        var askDepthVolTo = 0;
-        for(var ask of asks){
+        let askDepthVolFrom = 0;
+        let askDepthVolTo = 0;
+        for(let ask of asks){
             if(ask/100 < upperLimit){
                 askDepthVolFrom += this.asksMap[ask].asksvolume;
                 askDepthVolTo += this.asksMap[ask].asksvolume*this.asksMap[ask].value;
@@ -91,15 +91,15 @@ class Stats extends Component {
     }
 
     getPriceImpact(bids, asks){
-        var impact = {buy: 0, sell:0, average:{buy: 0, sell:0}};
+        let impact = {buy: 0, sell:0, average:{buy: 0, sell:0}};
         if(!this.state.priceImpactVolume){
             return impact;
         }
-        var midpoint = this.getSpread(bids, asks).midpoint;
-        var bidAverage =0, bidTotalVol = 0;
-        var askAverage =0, askTotalVol = 0;
-        var side = this.state.direction;
-        for(var bid of bids){
+        let midpoint = this.getSpread(bids, asks).midpoint;
+        let bidAverage =0, bidTotalVol = 0;
+        let askAverage =0, askTotalVol = 0;
+        let side = this.state.direction;
+        for(let bid of bids){
             impact.sell = this.bidsMap[bid].value - midpoint;
             if(this.bidsMap[bid].bidstotalvolume[side] > this.state.priceImpactVolume) {
                 bidAverage += (this.state.priceImpactVolume - bidTotalVol) * this.bidsMap[bid].value;
@@ -109,7 +109,7 @@ class Stats extends Component {
             bidTotalVol = this.bidsMap[bid].bidstotalvolume.to;
             bidAverage += (this.bidsMap[bid].bidsvolume * this.bidsMap[bid].value);
         }
-        for(var ask of asks){
+        for(let ask of asks){
             impact.buy = this.asksMap[ask].value - midpoint;
             if(this.asksMap[ask].askstotalvolume[side] > this.state.priceImpactVolume) {
                 askAverage += ((this.state.priceImpactVolume - askTotalVol) * this.asksMap[ask].value)
@@ -127,11 +127,11 @@ class Stats extends Component {
     }
 
     getStats(){
-        var stats = {};
+        let stats = {};
         this.bidsMap = this.props.orders[0];
         this.asksMap = this.props.orders[1];
-        var bids = Object.keys(this.props.orders[0]);
-        var asks = Object.keys(this.props.orders[1]);
+        let bids = Object.keys(this.props.orders[0]);
+        let asks = Object.keys(this.props.orders[1]);
         bids.sort(function (a, b) {
             return b - a;
         });
@@ -166,7 +166,7 @@ class Stats extends Component {
                                     name="switchToggle"
                                     value="buy"
                                     onChange={this.toggleState}
-                                    checked={this.state.toggle=='buy'}
+                                    checked={this.state.toggle==='buy'}
                                 />
                                 <label htmlFor="switch_left">Buy</label>
                                 <input
@@ -175,7 +175,7 @@ class Stats extends Component {
                                     name="switchToggle"
                                     value="sell"
                                     onChange={this.toggleState}
-                                    checked={this.state.toggle=='sell'}
+                                    checked={this.state.toggle==='sell'}
                                 />
                                 <label htmlFor="switch_right">Sell</label>
                             </form>
@@ -188,7 +188,7 @@ class Stats extends Component {
                                     name="switchToggle"
                                     value="from"
                                     onChange={this.toggleDirection}
-                                    checked={this.state.direction=='from'}
+                                    checked={this.state.direction==='from'}
                                 />
                                 <label htmlFor="switch_direction_to"><i className="fa fa-exchange"></i>BTC</label>
                                 <input
@@ -197,7 +197,7 @@ class Stats extends Component {
                                     name="switchToggle"
                                     value="to"
                                     onChange={this.toggleDirection}
-                                    checked={this.state.direction=='to'}
+                                    checked={this.state.direction==='to'}
                                 />
                                 <label htmlFor="switch_direction_from"><i className="fa fa-exchange"></i>USDT</label>
                             </form>
@@ -274,7 +274,11 @@ class Stats extends Component {
         )
     }
 }
+
 Stats.propTypes = {
+    orders: PropTypes.object.isRequired,
+    fSym: PropTypes.string.isRequired,
+    tSym: PropTypes.string.isRequired,
 };
 
 export { Stats };

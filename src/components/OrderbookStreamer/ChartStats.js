@@ -28,7 +28,7 @@ class ChartStats extends Component {
                                 name="switchToggle"
                                 value="buy"
                                 onChange={this.toggleState}
-                                checked={this.state.toggle=='buy'}
+                                checked={this.state.toggle==='buy'}
                             />
                             <label htmlFor="switch_left">Buy</label>
 
@@ -38,7 +38,7 @@ class ChartStats extends Component {
                                 name="switchToggle"
                                 value="sell"
                                 onChange={this.toggleState}
-                                checked={this.state.toggle=='sell'}
+                                checked={this.state.toggle==='sell'}
                             />
                             <label htmlFor="switch_right">Sell</label>
                         </form>
@@ -97,6 +97,7 @@ class ChartStats extends Component {
 }
 
 ChartStats.propTypes = {
+    stats: PropTypes.object.isRequired
 };
 
 export { ChartStats };
