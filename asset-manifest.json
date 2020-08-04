@@ -1,37 +1,26 @@
 {
   "files": {
     "main.css": "/orderbook-streamer/static/css/main.0a30fa8e.chunk.css",
-    "main.js": "/orderbook-streamer/static/js/main.4ede3746.chunk.js",
-    "main.js.map": "/orderbook-streamer/static/js/main.4ede3746.chunk.js.map",
-    "runtime-main.js": "/orderbook-streamer/static/js/runtime-main.5a08883e.js",
-    "runtime-main.js.map": "/orderbook-streamer/static/js/runtime-main.5a08883e.js.map",
-    "xlsx.js": "/orderbook-streamer/static/js/xlsx.82facf92.chunk.js",
-    "xlsx.js.map": "/orderbook-streamer/static/js/xlsx.82facf92.chunk.js.map",
-    "static/css/3.5f08886e.chunk.css": "/orderbook-streamer/static/css/3.5f08886e.chunk.css",
-    "static/js/3.156841ed.chunk.js": "/orderbook-streamer/static/js/3.156841ed.chunk.js",
-    "static/js/3.156841ed.chunk.js.map": "/orderbook-streamer/static/js/3.156841ed.chunk.js.map",
-    "static/js/4.bc10a861.chunk.js": "/orderbook-streamer/static/js/4.bc10a861.chunk.js",
-    "static/js/4.bc10a861.chunk.js.map": "/orderbook-streamer/static/js/4.bc10a861.chunk.js.map",
-    "static/js/5.1ef1efd8.chunk.js": "/orderbook-streamer/static/js/5.1ef1efd8.chunk.js",
-    "static/js/5.1ef1efd8.chunk.js.map": "/orderbook-streamer/static/js/5.1ef1efd8.chunk.js.map",
-    "static/js/6.c79cf469.chunk.js": "/orderbook-streamer/static/js/6.c79cf469.chunk.js",
-    "static/js/6.c79cf469.chunk.js.map": "/orderbook-streamer/static/js/6.c79cf469.chunk.js.map",
+    "main.js": "/orderbook-streamer/static/js/main.5da48003.chunk.js",
+    "main.js.map": "/orderbook-streamer/static/js/main.5da48003.chunk.js.map",
+    "runtime-main.js": "/orderbook-streamer/static/js/runtime-main.3cc43037.js",
+    "runtime-main.js.map": "/orderbook-streamer/static/js/runtime-main.3cc43037.js.map",
+    "static/css/2.5f08886e.chunk.css": "/orderbook-streamer/static/css/2.5f08886e.chunk.css",
+    "static/js/2.d288b30e.chunk.js": "/orderbook-streamer/static/js/2.d288b30e.chunk.js",
+    "static/js/2.d288b30e.chunk.js.map": "/orderbook-streamer/static/js/2.d288b30e.chunk.js.map",
     "index.html": "/orderbook-streamer/index.html",
-    "precache-manifest.4763d4540a55cda033ab1564ecf0f9eb.js": "/orderbook-streamer/precache-manifest.4763d4540a55cda033ab1564ecf0f9eb.js",
+    "precache-manifest.bd5492f51e96e688039535c1637625aa.js": "/orderbook-streamer/precache-manifest.bd5492f51e96e688039535c1637625aa.js",
     "service-worker.js": "/orderbook-streamer/service-worker.js",
-    "static/css/3.5f08886e.chunk.css.map": "/orderbook-streamer/static/css/3.5f08886e.chunk.css.map",
+    "static/css/2.5f08886e.chunk.css.map": "/orderbook-streamer/static/css/2.5f08886e.chunk.css.map",
     "static/css/main.0a30fa8e.chunk.css.map": "/orderbook-streamer/static/css/main.0a30fa8e.chunk.css.map",
-    "static/js/3.156841ed.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/3.156841ed.chunk.js.LICENSE.txt",
-    "static/js/4.bc10a861.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/4.bc10a861.chunk.js.LICENSE.txt",
-    "static/js/5.1ef1efd8.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/5.1ef1efd8.chunk.js.LICENSE.txt",
-    "static/media/font-awesome.min.css": "/orderbook-streamer/static/media/fontawesome-webfont.fee66e71.woff",
-    "static/media/logo.svg": "/orderbook-streamer/static/media/logo.5d5d9eef.svg"
+    "static/js/2.d288b30e.chunk.js.LICENSE.txt": "/orderbook-streamer/static/js/2.d288b30e.chunk.js.LICENSE.txt",
+    "static/media/font-awesome.min.css": "/orderbook-streamer/static/media/fontawesome-webfont.fee66e71.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.5a08883e.js",
-    "static/css/3.5f08886e.chunk.css",
-    "static/js/3.156841ed.chunk.js",
+    "static/js/runtime-main.3cc43037.js",
+    "static/css/2.5f08886e.chunk.css",
+    "static/js/2.d288b30e.chunk.js",
     "static/css/main.0a30fa8e.chunk.css",
-    "static/js/main.4ede3746.chunk.js"
+    "static/js/main.5da48003.chunk.js"
   ]
 }
