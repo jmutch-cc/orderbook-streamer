@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b2ebdb23d21ddc1354e5b700e34fa9d2",
+    "revision": "bebcef7352d22de0e5a62deb977fe10b",
     "url": "/orderbook-streamer/index.html"
   },
   {
-    "revision": "97343591af148cbacdc1",
+    "revision": "9d0da593516ab6f017be",
     "url": "/orderbook-streamer/static/css/2.5f08886e.chunk.css"
   },
   {
-    "revision": "af094e3863c17d35eebc",
+    "revision": "7d74f73bba47eabb17c5",
     "url": "/orderbook-streamer/static/css/main.0a30fa8e.chunk.css"
   },
   {
-    "revision": "97343591af148cbacdc1",
-    "url": "/orderbook-streamer/static/js/2.d288b30e.chunk.js"
+    "revision": "9d0da593516ab6f017be",
+    "url": "/orderbook-streamer/static/js/2.3a1b41f3.chunk.js"
   },
   {
     "revision": "f205bde0788dae202f008b73d3d21ee1",
-    "url": "/orderbook-streamer/static/js/2.d288b30e.chunk.js.LICENSE.txt"
+    "url": "/orderbook-streamer/static/js/2.3a1b41f3.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "af094e3863c17d35eebc",
-    "url": "/orderbook-streamer/static/js/main.5da48003.chunk.js"
+    "revision": "7d74f73bba47eabb17c5",
+    "url": "/orderbook-streamer/static/js/main.48beb557.chunk.js"
   },
   {
     "revision": "0a65a6f1ba9fc1a5a426",
