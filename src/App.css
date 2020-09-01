@@ -36,12 +36,17 @@ nav.header {
   margin-bottom: 20px;
 }
 
+.custom-select {
+  margin-left: 15px;
+}
+
 .subscription{
   margin: auto;
 }
 .subscription button,
+.subscription input,
 .subscription select{
-  margin: 10px;
+  margin-bottom: 15px;
 }
 
 table.orderbook {

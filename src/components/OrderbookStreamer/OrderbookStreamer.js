@@ -14,7 +14,8 @@ class OrderbookStreamer extends Component {
             lastUpdated: [],
             exchange: props.exchange,
             fSym: props.fSym,
-            tSym: props.tSym
+            tSym: props.tSym,
+            apiKey: props.apiKey
         };
         let currentComponent = this;
          setInterval(function(){
@@ -23,10 +24,9 @@ class OrderbookStreamer extends Component {
             });
             orderbookService.resetLastUpdated();
         }, 150);
-        this.subscribe(this.state.exchange, this.state.fSym, this.state.tSym);
     }
 
-    subscribe(exchange, fSym, tSym){
+    subscribe(exchange, fSym, tSym, url, apiKey){
         let currentComponent = this;
         currentComponent.callback = (data) => {
             this.setState(prevState => {
@@ -35,17 +35,21 @@ class OrderbookStreamer extends Component {
             });
             orderbookService.resetLastUpdated();
         }
-        orderbookService.subscribe( exchange, fSym, tSym, currentComponent.callback );
+        orderbookService.subscribe( exchange, fSym, tSym, url, apiKey, currentComponent.callback );
     }
 
-    changeSubscription(exchange, fSym, tSym){
+    changeSubscription(subscriptionKey, url, apiKey){
+        let parts = subscriptionKey.split('~');
+        let exchange = parts[0];
+        let fSym = parts[1];
+        let tSym = parts[2];
         orderbookService.unsubscribe();
         this.setState({
             exchange: exchange,
             fSym: fSym,
             tSym: tSym,
         });
-        this.subscribe(exchange, fSym, tSym);
+        this.subscribe(exchange, fSym, tSym, url, apiKey);
     }
 
     render() {
@@ -53,9 +57,12 @@ class OrderbookStreamer extends Component {
             <div className="container">
                 <Subscription
                     subscribe={this.changeSubscription}
+                    clientUrl={orderbookService.clientUrl}
+                    apiKey={this.state.apiKey}
                     exchange={this.state.exchange}
                     fSym={this.state.fSym}
                     tSym={this.state.tSym}
+                    autoSubscribe={this.props.autoSubscribe}
                 />
                 <Display
                     fSym={this.state.fSym}

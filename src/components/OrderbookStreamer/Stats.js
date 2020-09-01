@@ -190,7 +190,7 @@ class Stats extends Component {
                                     onChange={this.toggleDirection}
                                     checked={this.state.direction==='from'}
                                 />
-                                <label htmlFor="switch_direction_to"><i className="fa fa-exchange"></i>BTC</label>
+                                <label htmlFor="switch_direction_to"><i className="fa fa-exchange"></i>{this.props.fSym}</label>
                                 <input
                                     type="radio"
                                     id="switch_direction_from"
@@ -199,7 +199,7 @@ class Stats extends Component {
                                     onChange={this.toggleDirection}
                                     checked={this.state.direction==='to'}
                                 />
-                                <label htmlFor="switch_direction_from"><i className="fa fa-exchange"></i>USDT</label>
+                                <label htmlFor="switch_direction_from"><i className="fa fa-exchange"></i>{this.props.tSym}</label>
                             </form>
                             <input className="form-control price-impact" type="text" value={this.state.priceImpactVolume} onChange={this.handleChange}/>
                         </div>
@@ -224,7 +224,7 @@ class Stats extends Component {
                                     Price Impact
                                 </div>
                                 <div className={`stat-data ${this.stats.impact[this.state.toggle] >= 0 ? 'up-text' : 'down-text'}`}>
-                                    {this.props.tSym} {utils.formatNumber(this.stats.impact[this.state.toggle], 3, true)}
+                                    {this.props.tSym} {utils.formatNumber(this.stats.impact[this.state.toggle], 6, true)}
                                 </div>
                             </div>
                         </div>

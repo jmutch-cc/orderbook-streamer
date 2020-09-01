@@ -29,10 +29,10 @@ class OrderRow extends Component {
                 `row data-row ${this.updated ? 'highlight' : ''}`
                 }>
                 <div className="col-md">
-                    {utils.formatNumber(this.price, 2)}
+                    {utils.formatNumber(this.price, this.price > 1 ? 4 : 8, true)}
                 </div>
                 <div className="col-md">
-                    {utils.formatNumber(this.volume, 6)}
+                    {utils.formatNumber(this.volume, 4, true)}
                 </div>
                 <div className="col-md">
                     {utils.formatNumber(this.tsymPrice, 4, true)}

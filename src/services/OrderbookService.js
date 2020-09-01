@@ -1,13 +1,14 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const apiKey = 'df1c3574c94e2c8e04a8c74b07a60b6d2e0279f5a209d81c80973d7bffdd3908'
-const clientUrl = 'wss://streamer.cryptocompare.com/v2?api_key=' + apiKey;
-let client = new W3CWebSocket(clientUrl);
+const clientUrl = 'wss://streamer.cryptocompare.com/v2';
+// let client = new W3CWebSocket(clientUrl);
 
 export class OrderbookService {
 
     snapshot = {0:{},1:{}};
     lastUpdated = [];
     depth = 2000000;
+    clientUrl = clientUrl;
+    client;
 
     processData(list, type, desc) {
         // Convert to data points
@@ -148,20 +149,18 @@ export class OrderbookService {
         }
     }
 
-    subscribe(exchange, fSym, tSym, callback) {
-        console.log('Subscribing',exchange, tSym, fSym, client);
-        client = client == null ? new W3CWebSocket(clientUrl) : client;
-        client.onopen = () => {
-            client.send(JSON.stringify({
+    subscribe(exchange, fSym, tSym, url, apiKey, callback) {
+        console.log('Subscribing',exchange, tSym, fSym, this.client);
+        this.client = new W3CWebSocket(url + '?api_key=' + apiKey);
+        this.client.onopen = () => {
+            this.client.send(JSON.stringify({
                 action: 'SubAdd',
                 subs: ['8~'+exchange+'~'+fSym+'~'+tSym],
-                api_key: apiKey,
             }));
         };
-        client.onmessage = (message) => {
+        this.client.onmessage = (message) => {
             if(message.data){
                 let msg = JSON.parse(message.data);
-                // console.log(msg);
                 if(msg.TYPE === '9'){
                     this.populateSnapshot(msg, callback);
                 }
@@ -173,10 +172,11 @@ export class OrderbookService {
     }
 
     unsubscribe(currency) {
-        console.log('Unsubscribing');
         this.resetLastUpdated();
         this.resetSnapshot();
-        client.close();
-        client = null;
+        if(this.client != null){
+            this.client.close();
+            this.client = null;
+        }
     }
 }
