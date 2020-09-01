@@ -15,11 +15,6 @@ class Subscription extends Component {
         this.changeClientUrl = this.changeClientUrl.bind(this);
         this.changeApiKey = this.changeApiKey.bind(this);
 
-        let search = window.location.search;
-        let params = new URLSearchParams(search);
-        let foo = params.get('test');
-        console.log(foo);
-
         this.state = {
             exchanges: {},
             fSyms: {},
@@ -60,7 +55,6 @@ class Subscription extends Component {
 
     selectExchange(e){
         let exchange = e.target.value;
-        console.log(this.state.exchanges[exchange].pairs);
         let pairs = this.state.exchanges[exchange].pairs;
         this.setState({
             exchange: exchange,
@@ -75,7 +69,6 @@ class Subscription extends Component {
     }
 
     selectFsym(e){
-        console.log("Select Fsym");
         let fSym = e.target.value;
         let pairs = this.state.exchanges[this.state.exchange].pairs;
         this.setState({
@@ -88,7 +81,6 @@ class Subscription extends Component {
     }
 
     selectTsym(e){
-        console.log("Select Tsym");
         let tSym = e.target.value;
         this.setState({ tSym: tSym},() => {
             this.setState({subscriptionKey: this.state.exchange + '~' + this.state.fSym + '~' + this.state.tSym});
