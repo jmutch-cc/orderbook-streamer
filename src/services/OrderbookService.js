@@ -151,7 +151,7 @@ export class OrderbookService {
 
     subscribe(exchange, fSym, tSym, url, apiKey, callback) {
         console.log('Subscribing',exchange, tSym, fSym, this.client);
-        this.client = new W3CWebSocket(url + '?api_key=' + apiKey);
+        this.client = new W3CWebSocket(url + (apiKey ? '?api_key=' + apiKey : ''));
         this.client.onopen = () => {
             this.client.send(JSON.stringify({
                 action: 'SubAdd',

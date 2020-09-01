@@ -29,7 +29,7 @@ class Subscription extends Component {
     }
 
     componentDidMount() {
-        axios.get('https://min-api.cryptocompare.com/data/ob/l2/exchanges?api_key='+this.state.apiKey).then(orderbookRes => {
+        axios.get('https://min-api.cryptocompare.com/data/ob/l2/exchanges?api_key=df1c3574c94e2c8e04a8c74b07a60b6d2e0279f5a209d81c80973d7bffdd3908').then(orderbookRes => {
             axios.get('https://min-api.cryptocompare.com/data/v4/all/exchanges')
                 .then(res => {
                     let orderbookExchanges = {};
